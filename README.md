@@ -9,8 +9,7 @@
 <br>
 
 <p align="center">
-  <!-- Replace with actual screenshot of the Lanes dashboard -->
-  <img src="https://placeholder.lanes.sh/dashboard.png" alt="Lanes Dashboard" width="800" />
+  <img src="assets/demo.png" alt="Lanes Dashboard" width="800" />
 </p>
 
 <br>
