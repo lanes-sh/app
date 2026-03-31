@@ -17,13 +17,13 @@
 
 ## You lost track three agents ago.
 
-You have five AI coding agents running across eight terminal tabs. One is waiting for input. One finished ten minutes ago and you didn't notice. Two are doing overlapping work. The only thing keeping it all together is your short-term memory — and it just failed.
+You have five AI coding agents running across eight terminal tabs. One is waiting for input. One finished ten minutes ago and you didn't notice. Two are doing overlapping work. The only thing keeping it all together is your short-term memory, and it just failed.
 
 AI agents got powerful. The workflow around them didn't.
 
 ## Lanes fixes that.
 
-Lanes is a native desktop app that puts every AI coding session on an issue board. Each card is a task. Each task can have a live agent terminal attached. You see what's running, what's blocked, what's waiting, and what shipped — in one window, at a glance.
+Lanes is a native desktop app that puts every AI coding session on an issue board. Each card is a task. Each task can have a live agent terminal attached. You see what's running, what's blocked, what's waiting, and what shipped, in one window, at a glance.
 
 No context switching. No lost terminals. No wondering what that tab was doing. Just drag work through your pipeline while your agents execute.
 
@@ -32,7 +32,7 @@ It's the layer that was missing between you and your fleet of AI agents.
 ## Features
 
 ### Issue Board
-Drag issues through workflow columns — Planning, Implementation, Review, Done — plus Backlog and Misc. Multi-select with Shift+Click and Cmd+Click for bulk operations. Right-click context menus, sorting options, and collapsible columns. Board tabs scoped per project directory and worktree.
+Drag issues through workflow columns, Planning, Implementation, Review, Done, plus Backlog and Misc. Multi-select with Shift+Click and Cmd+Click for bulk operations. Right-click context menus, sorting options, and collapsible columns. Board tabs scoped per project directory and worktree.
 
 ### Live Embedded Terminals
 Every issue runs an AI session in a real PTY-backed terminal. Start sessions in plan mode or implement mode. Resume Claude sessions across restarts. Drag files onto the terminal to inject paths. Real-time status detection: busy, awaiting input, stopped, exited, error.
@@ -62,15 +62,15 @@ Discover running CLI processes across the system. Three-way classification: Trac
 
 Lanes is CLI-agnostic. It works with any AI tool that runs in a terminal.
 
-- **Claude Code** — Anthropic's CLI for Claude
-- **Codex CLI** — OpenAI's terminal agent
-- **Gemini CLI** — Google's terminal agent
-- **Any terminal-based AI tool** — If it runs in a shell, it runs in Lanes
+- **Claude Code**, Anthropic's CLI for Claude
+- **Codex CLI**, OpenAI's terminal agent
+- **Gemini CLI**, Google's terminal agent
+- **Any terminal-based AI tool**, if it runs in a shell, it runs in Lanes
 
 ## Install
 
 ```bash
-brew install --cask lanes-sh/lanes/lanes
+brew install --cask lanes-sh/lanes/lanes && open Lanes
 ```
 
 Requires macOS Ventura or later. Native on Apple Silicon and Intel.
@@ -96,11 +96,11 @@ Lanes checks for updates on launch and updates itself. No need to run `brew upgr
 
 ## Documentation
 
-- [User Guide](docs/user-guides/README.md) — Everything you need to know to get the most out of Lanes
+- [User Guide](docs/user-guides/README.md), everything you need to know to get the most out of Lanes
 
 ## Built for developers who ship
 
-Tauri 2. React 19. SQLite. Local-first architecture — your code and data never leave your machine. Fast startup, low memory footprint, native performance.
+Tauri 2. React 19. SQLite. Local-first architecture. Your code and data never leave your machine. Fast startup, low memory footprint, native performance.
 
 ## License
 
