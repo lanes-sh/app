@@ -94,6 +94,10 @@ Lanes checks for updates on launch and updates itself. No need to run `brew upgr
 | Cmd/Ctrl+Click | Toggle individual issue selection |
 | Escape | Clear selection or close dialog |
 
+## Documentation
+
+- [User Guide](docs/user-guides/README.md) — Everything you need to know to get the most out of Lanes
+
 ## Built for developers who ship
 
 Tauri 2. React 19. SQLite. Local-first architecture — your code and data never leave your machine. Fast startup, low memory footprint, native performance.
