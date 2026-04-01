@@ -4,6 +4,7 @@
   <h1 align="center">Lanes</h1>
   <p align="center"><strong>Mission control for AI coding agents.</strong></p>
   <p align="center">Track, orchestrate, and ship across multiple AI CLI sessions from one place.</p>
+  <p align="center"><a href="#install">Quick start</a></p>
 </p>
 
 <br>
@@ -73,6 +74,8 @@ brew install --cask lanes-sh/lanes/lanes && open Lanes
 ```
 
 Requires macOS Ventura or later. Native on Apple Silicon and Intel.
+
+⚠️ On first launch, macOS will prompt you to grant **Full Disk Access**. This is needed so Lanes can detect running CLI processes and read worktree state across your projects. You only need to do this once.
 
 ## Auto-updates
 
