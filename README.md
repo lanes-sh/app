@@ -31,13 +31,11 @@ It's the layer that was missing between you and your fleet of AI agents.
 
 ## Install
 
-```bash
-brew install --cask lanes-sh/lanes/lanes && open Lanes
-```
+Lanes is in early development — we're iterating fast and want to stay close to our users.
+
+Join our [Discord community](https://discord.gg/B3f8QjqeBa) for installation instructions, early access, and to share feedback directly with the team.
 
 Requires macOS Ventura or later. Native on Apple Silicon and Intel.
-
-⚠️ On first launch, macOS will prompt you to grant **Full Disk Access**. This is needed so Lanes can detect running CLI processes and read worktree state across your projects. You only need to do this once.
 
 ## Features
 
@@ -69,13 +67,14 @@ Diff view with two modes: Changes (uncommitted working tree diff) and History (c
 Discover running CLI processes across the system. Three-way classification: Tracked (managed by Lanes), Orphan (has issue ID but no active session), External (unrelated). Kill individual processes or stop all sessions at once.
 
 ### Works with
-- **Claude Code**, Anthropic's CLI for Claude
+
+**Claude Code**, Anthropic's CLI for Claude.
 
 Support for Codex CLI, Gemini CLI, and other terminal-based AI tools is on the roadmap.
 
 ## Auto-updates
 
-Lanes checks for updates on launch and updates itself. No need to run `brew upgrade`. You can also check manually in **Settings > About > Check Now**.
+Lanes checks for updates on launch and updates itself. You can also check manually in **Settings > About > Check Now**.
 
 ## Keyboard Shortcuts
 
@@ -94,7 +93,7 @@ Lanes checks for updates on launch and updates itself. No need to run `brew upgr
 
 ## Documentation
 
-- [User Guide](docs/user-guides/README.md), everything you need to know to get the most out of Lanes
+[User Guide](docs/user-guides/README.md), everything you need to know to get the most out of Lanes
 
 ## Built for developers who ship
 

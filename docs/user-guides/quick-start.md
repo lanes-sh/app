@@ -1,17 +1,15 @@
 # Quick Start
 
-Get Lanes installed and your first AI session running in about two minutes.
+Get your first AI session running in about two minutes once Lanes is installed.
 
 
 ## Install Lanes
 
-Open a terminal and run:
+Join our [Discord community](https://discord.gg/B3f8QjqeBa) for installation instructions and early access.
 
-```
-brew install --cask lanes-sh/lanes/lanes && open -a Lanes
-```
+We're in early development and want to stay close to our users — Discord lets us share updates, collect feedback, and iterate quickly together.
 
-This installs Lanes via Homebrew and launches it immediately. On first launch, Lanes will detect which AI CLIs you have installed (Claude Code, Codex CLI, Gemini CLI) and display their versions in Settings.
+On first launch, Lanes will detect which AI CLIs you have installed (Claude Code, Codex CLI, Gemini CLI) and display their versions in Settings.
 
 
 ## Set Your Working Directory
