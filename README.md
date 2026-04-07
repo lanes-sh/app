@@ -31,11 +31,13 @@ It's the layer that was missing between you and your fleet of AI agents.
 
 ## Install
 
-Lanes is in early development — we're iterating fast and want to stay close to our users.
-
-Join our [Discord community](https://discord.gg/B3f8QjqeBa) for installation instructions, early access, and to share feedback directly with the team.
+```bash
+brew install --cask lanes-sh/lanes/lanes && open -a Lanes
+```
 
 Requires macOS Ventura or later. Native on Apple Silicon and Intel.
+
+**Join our [Discord community](https://discord.gg/B3f8QjqeBa)** for updates, to share feedback, ask questions, and connect with other users. We're iterating fast and Discord is the best way to stay in the loop.
 
 ## Features
 

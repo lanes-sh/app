@@ -110,12 +110,6 @@ want active rather than typing them each time.
 
 This tab helps you verify that Lanes has the system access it needs:
 
-### macOS Full Disk Access
-
-Lanes needs Full Disk Access to manage terminals, create worktrees, and read
-project files across your system. This tab shows whether Full Disk Access is
-currently granted and walks you through enabling it in System Settings if not.
-
 ### Folder Access Verification
 
 Confirms that Lanes can read and write to your configured project directories.
@@ -146,7 +140,6 @@ the first time you add a project directory.
 - Use the CLI Flags tab sparingly. Flags apply to every session, so only add
   ones you truly want everywhere.
 - Review the Permissions tab if sessions fail to start or files are unreadable.
-  Missing Full Disk Access is a common culprit on macOS.
 
 ---
 
