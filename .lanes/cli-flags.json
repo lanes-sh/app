@@ -1,0 +1,39 @@
+{
+  "entries": [
+    {
+      "flag": "--enable-auto-mode",
+      "value": "",
+      "kind": "flag"
+    },
+    {
+      "flag": "CLAUDE_CODE_HIDE_ACCOUNT_INFO",
+      "value": "1",
+      "kind": "env"
+    },
+    {
+      "flag": "CLAUDE_CODE_NO_FLICKER",
+      "value": "1",
+      "kind": "env"
+    },
+    {
+      "flag": "CLAUDE_CODE_SCROLL_SPEED",
+      "value": "3",
+      "kind": "env"
+    },
+    {
+      "flag": "IS_DEMO",
+      "value": "1",
+      "kind": "env"
+    },
+    {
+      "flag": "effort",
+      "value": "max",
+      "kind": "flag"
+    },
+    {
+      "flag": "model",
+      "value": "claude-opus-4-7",
+      "kind": "flag"
+    }
+  ]
+}

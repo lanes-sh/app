@@ -95,7 +95,7 @@ Lanes checks for updates on launch and updates itself. You can also check manual
 
 ## Documentation
 
-[User Guide](docs/user-guides/README.md), everything you need to know to get the most out of Lanes
+[User Guide](https://lanes.sh/docs), everything you need to know to get the most out of Lanes
 
 ## Built for developers who ship
 

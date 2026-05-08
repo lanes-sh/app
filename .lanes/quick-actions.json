@@ -1,0 +1,76 @@
+{
+  "entries": [
+    {
+      "name": "Commit with small model",
+      "prompt": "claude --model claude-haiku-4-5-20251001 'commit all changes to remote branch with a meaningful message'",
+      "type": "terminal",
+      "category": "general"
+    },
+    {
+      "name": "Merge worktree",
+      "prompt": "cd \"{{projectPath}}\" && git fetch origin && git checkout {{baseBranch}} && git pull --ff-only && git merge --no-ff {{name}} -m \"Merge {{name}} into {{baseBranch}}\"",
+      "type": "terminal",
+      "category": "worktree"
+    },
+    {
+      "name": "Test",
+      "prompt": "npm run dev",
+      "type": "terminal",
+      "category": "general"
+    },
+    {
+      "name": "Commit",
+      "prompt": "Commit all changes to the branch remote. Write a meaningful, concise commit message that summarizes what changed — not just \"bump version\". If the only change is a version bump with no other commits, \"bump\" is fine; otherwise summarize the release or changes.",
+      "type": "claude",
+      "category": "general"
+    },
+    {
+      "name": "Release",
+      "prompt": "Bump the version, commit all changes to the develop remote, and then merge develop into main to start a new release. Use a meaningful, concise commit message that summarizes the release contents (e.g. the key changes since the last release) — not just \"bump version\". If it's only a version bump with no other changes, \"bump\" is fine.",
+      "type": "claude",
+      "category": "general"
+    },
+    {
+      "name": "Review changes",
+      "prompt": "/review",
+      "type": "claude",
+      "category": "general"
+    },
+    {
+      "name": "Add tests",
+      "prompt": "Analyze the recent changes and add comprehensive tests. Cover happy paths, edge cases, and error scenarios. Follow existing test patterns in the codebase.",
+      "type": "claude",
+      "category": "general"
+    },
+    {
+      "name": "Fix lint",
+      "prompt": "Check for and fix all linting errors in changed files.",
+      "type": "claude",
+      "category": "general"
+    },
+    {
+      "name": "Refactor",
+      "prompt": "Review the recent changes and refactor for clarity, simplicity, and maintainability. No behavior changes.",
+      "type": "claude",
+      "category": "general"
+    },
+    {
+      "name": "Test Worktree",
+      "prompt": "cd {{path}} && pnpm install && pnpm app",
+      "type": "terminal",
+      "category": "worktree"
+    },
+    {
+      "name": "Complete & Merge",
+      "prompt": "Merge the worktree branch at {{path}} into {{baseBranch}}. Commit all pending changes first, then merge and resolve any conflicts. After successful merge, confirm completion. Use meaningful, concise commit/merge messages that summarize what changed — not just \"merge branch\".",
+      "type": "claude",
+      "category": "worktree"
+    },
+    {
+      "name": "Start API",
+      "prompt": "uv run uvicorn src.main:app --reload --port 8080",
+      "type": "terminal",
+      "category": "general"
+    }
+  ]
+}

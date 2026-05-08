@@ -1,0 +1,16 @@
+{
+  "entries": [
+    {
+      "name": "Bug",
+      "color": "red"
+    },
+    {
+      "name": "Enhancement",
+      "color": "indigo"
+    },
+    {
+      "name": "Feature",
+      "color": "blue"
+    }
+  ]
+}
