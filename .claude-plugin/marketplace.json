@@ -1,0 +1,15 @@
+{
+  "name": "lanes",
+  "description": "Skills and slash commands for using Lanes — the AI agent issue board — with Claude Code",
+  "owner": {
+    "name": "Lanes",
+    "url": "https://lanes.sh"
+  },
+  "plugins": [
+    {
+      "name": "lanes",
+      "source": "./plugins/lanes",
+      "description": "Skills and setup commands for using Lanes with Claude Code"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "lanes",
+  "version": "0.1.0",
+  "description": "Lanes skills and slash commands for Claude Code",
+  "author": {
+    "name": "Lanes",
+    "url": "https://lanes.sh"
+  },
+  "homepage": "https://lanes.sh",
+  "keywords": ["lanes", "linear", "mcp", "sessions", "issue-tracker", "agent-orchestration"]
+}

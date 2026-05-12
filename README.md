@@ -127,6 +127,40 @@ Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 
 Full parameter schemas and example prompts: [lanes.sh/docs/local-mcp](https://lanes.sh/docs/local-mcp).
 
+## Claude Code Skills
+
+This repo is also a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces). Two skills + a setup command teach Claude Code how to use the Lanes MCP intelligently:
+
+- **`lanes-sessions`** — driving the lanes_* tools through chat: creating issues, starting/inspecting sessions, batch-launching, worktrees, terminal output, label/component lookups. See [`plugins/lanes/skills/lanes-sessions/SKILL.md`](plugins/lanes/skills/lanes-sessions/SKILL.md).
+- **`linear-lanes-bridge`** — importing Linear issues into Lanes for local Claude Code execution, decomposing tickets, and pushing PR links / comments back to Linear. Requires Linear MCP. See [`plugins/lanes/skills/linear-lanes-bridge/SKILL.md`](plugins/lanes/skills/linear-lanes-bridge/SKILL.md).
+- **`/lanes:setup-mcp`** — slash command that connects Claude Code to the running Lanes app and verifies the SSE endpoint is live, so first-time setup works from chat instead of the Settings panel.
+
+### Install (recommended: plugin)
+
+In any Claude Code session:
+
+```
+/plugin marketplace add lanes-sh/app
+/plugin install lanes@lanes
+/lanes:setup-mcp
+```
+
+This pulls the marketplace from this repo, installs the `lanes` plugin (skills + commands), then runs the setup command to register the MCP. Updates: `/plugin marketplace update lanes`. Versioned via `.claude-plugin/plugin.json`.
+
+### Install (alternative: skills.sh)
+
+```
+npx skills add lanes-sh/app
+```
+
+[skills.sh](https://skills.sh) installs only the SKILL.md files. To also enable the MCP, run:
+
+```
+claude mcp add --transport sse lanes http://localhost:5353/sse --scope user
+```
+
+then restart Claude Code. Lanes itself must be running (the desktop app open) for the MCP endpoint to respond.
+
 ## Auto-updates
 
 Lanes checks for updates on launch and updates itself. You can also check manually in **Settings > About > Check Now**.
