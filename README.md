@@ -129,11 +129,15 @@ Full parameter schemas and example prompts: [lanes.sh/docs/local-mcp](https://la
 
 ## Claude Code Skills
 
-This repo is also a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces). Two skills + a setup command teach Claude Code how to use the Lanes MCP intelligently:
+This repo is also a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces) with two plugins.
 
-- **`lanes-sessions`** — driving the lanes_* tools through chat: creating issues, starting/inspecting sessions, batch-launching, worktrees, terminal output, label/component lookups. See [`plugins/lanes/skills/lanes-sessions/SKILL.md`](plugins/lanes/skills/lanes-sessions/SKILL.md).
-- **`linear-lanes-bridge`** — importing Linear issues into Lanes for local Claude Code execution, decomposing tickets, and pushing PR links / comments back to Linear. Requires Linear MCP. See [`plugins/lanes/skills/linear-lanes-bridge/SKILL.md`](plugins/lanes/skills/linear-lanes-bridge/SKILL.md).
-- **`/lanes:setup-mcp`** — slash command that connects Claude Code to the running Lanes app and verifies the SSE endpoint is live, so first-time setup works from chat instead of the Settings panel.
+**`lanes-desktop`** — skills and a setup command for driving the Lanes desktop app (the issue board and its local MCP) from Claude Code:
+
+- **`lanes-sessions`** — the lanes_* tools through chat: creating issues, starting/inspecting sessions, batch-launching, worktrees, terminal output, label/component lookups. See [`plugins/lanes-desktop/skills/lanes-sessions/SKILL.md`](plugins/lanes-desktop/skills/lanes-sessions/SKILL.md).
+- **`github-lanes-bridge`** / **`linear-lanes-bridge`** — importing GitHub or Linear issues into Lanes for local execution, decomposing tickets, and pushing PR links / comments back. See [`plugins/lanes-desktop/skills/`](plugins/lanes-desktop/skills/).
+- **`/lanes:setup-mcp`** — slash command that connects Claude Code to the running Lanes app and verifies the SSE endpoint is live.
+
+**`lanes-forms`** — a skill for [Lanes Forms](https://forms.lanes.sh): provision a live form endpoint with one POST (no signup), and fill in a form on a user's behalf. See [`plugins/lanes-forms/skills/lanes-forms/SKILL.md`](plugins/lanes-forms/skills/lanes-forms/SKILL.md).
 
 ### Install (recommended: plugin)
 
@@ -141,11 +145,14 @@ In any Claude Code session:
 
 ```
 /plugin marketplace add lanes-sh/app
-/plugin install lanes@lanes
-/lanes:setup-mcp
+/plugin install lanes-desktop@lanes   # the issue board + MCP
+/plugin install lanes-forms@lanes     # Lanes Forms
+/lanes:setup-mcp                       # desktop only: register the MCP
 ```
 
-This pulls the marketplace from this repo, installs the `lanes` plugin (skills + commands), then runs the setup command to register the MCP. Updates: `/plugin marketplace update lanes`. Versioned via `.claude-plugin/plugin.json`.
+Install whichever plugin you need (or both). `/lanes:setup-mcp` applies to `lanes-desktop`. Updates: `/plugin marketplace update lanes`. Each plugin is versioned via its `.claude-plugin/plugin.json`.
+
+> Renamed in a recent release: the old single `lanes` plugin is now `lanes-desktop`. If you installed `lanes@lanes` before, install `lanes-desktop@lanes` (and `lanes-forms@lanes` if you want Forms) again.
 
 ### Install (alternative: skills.sh)
 
@@ -153,7 +160,7 @@ This pulls the marketplace from this repo, installs the `lanes` plugin (skills +
 npx skills add lanes-sh/app
 ```
 
-[skills.sh](https://skills.sh) installs only the SKILL.md files. To also enable the MCP, run:
+[skills.sh](https://skills.sh) installs only the SKILL.md files. To also enable the desktop MCP, run:
 
 ```
 claude mcp add --transport sse lanes http://localhost:5353/sse --scope user

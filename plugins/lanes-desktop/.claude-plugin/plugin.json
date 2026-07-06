@@ -1,7 +1,7 @@
 {
-  "name": "lanes",
-  "version": "0.2.0",
-  "description": "Lanes skills and slash commands for Claude Code",
+  "name": "lanes-desktop",
+  "version": "0.3.0",
+  "description": "Lanes desktop: skills and slash commands for the Lanes issue board, sessions, and local MCP",
   "author": {
     "name": "Lanes",
     "url": "https://lanes.sh"

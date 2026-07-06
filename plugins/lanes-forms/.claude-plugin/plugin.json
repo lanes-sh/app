@@ -1,0 +1,11 @@
+{
+  "name": "lanes-forms",
+  "version": "0.1.0",
+  "description": "Lanes Forms: provision form endpoints and fill them in on a user's behalf, from Claude Code",
+  "author": {
+    "name": "Lanes",
+    "url": "https://lanes.sh"
+  },
+  "homepage": "https://forms.lanes.sh",
+  "keywords": ["lanes", "forms", "form-backend", "submissions", "contact-form", "mcp"]
+}
