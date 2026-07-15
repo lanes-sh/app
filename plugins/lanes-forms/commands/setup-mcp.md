@@ -99,4 +99,4 @@ One short paragraph: per-client registration status (Claude Code, Cursor), wheth
     -e LANES_API_URL=http://localhost:8080 -e LANES_API_KEY="$KEY" \
     -- uv --directory /path/to/lanes/api/packages/lanes-mcp run lanes-mcp
   ```
-  The hosted HTTP transport above needs no local package, so most users won't need this.
+  The hosted HTTP transport above needs no local package, so most users won't need this. This `LANES_API_URL=http://localhost:8080` override is **only** for Lanes maintainers developing the `api/` service itself. It does not change where a provisioned form is submitted from: a form you wire into a real site must always post to its production endpoint `https://api.lanes.sh/v1/f/{id}`, never a local base (`localhost` is an allowed submit origin, so prod works from local dev too).

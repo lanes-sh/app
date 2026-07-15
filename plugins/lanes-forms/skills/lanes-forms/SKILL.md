@@ -10,7 +10,7 @@ Lanes Forms is a form backend as a service. It gives an agent two capabilities:
 1. **Provision** a live form endpoint that captures submissions from the first second and delivers them (email forwarding and/or stored in the dashboard).
 2. **Fill** a form on a user's behalf by POSTing a submission to a live endpoint.
 
-The API base URL is `https://api.lanes.sh` in production (or the API URL the user configured — the local dev default is `http://localhost:8080`). Every error is a JSON envelope: `{"error": {"code", "message", "docs_url"}}`, so read `error.message` when a call fails.
+The API base URL is always `https://api.lanes.sh` — use this production host for every Lanes Forms call, including when wiring a form into a site you run on `localhost`. A form's endpoint lives only on the Lanes Forms API (the form ID exists nowhere else), and `localhost` is an allowed submit origin, so the production endpoint works from local dev too. **Never** point a form at a local or app-relative API base — that is the common mistake that silently posts to the wrong host in development. (The only exception is a Lanes maintainer developing the `api/` service itself, who may target a local `http://localhost:8080` checkout; end users never should.) Every error is a JSON envelope: `{"error": {"code", "message", "docs_url"}}`, so read `error.message` when a call fails.
 
 ## Fastest path: the MCP server
 
@@ -71,10 +71,10 @@ The keyed provision path and the MCP management tools need a workspace API key. 
 
 ## Wire it into a site
 
-Point the site's form at `endpoint_url` and add a hidden `_gotcha` honeypot input so bots that fill it are dropped:
+Point the site's form at the form's production endpoint, `https://api.lanes.sh/v1/f/{form_id}` (this is the `endpoint_url` the API returns — always an absolute `api.lanes.sh` URL), and add a hidden `_gotcha` honeypot input so bots that fill it are dropped:
 
 ```html
-<form action="ENDPOINT_URL" method="POST">
+<form action="https://api.lanes.sh/v1/f/{form_id}" method="POST">
   <input type="email" name="email" required />
   <textarea name="message"></textarea>
   <input type="text" name="_gotcha" style="display:none" tabindex="-1" />
@@ -82,7 +82,9 @@ Point the site's form at `endpoint_url` and add a hidden `_gotcha` honeypot inpu
 </form>
 ```
 
-A browser submission is accepted when its `Origin` is in `allowed_origins`. A plain HTML form post (the browser sends `Accept: text/html`) is redirected to a hosted `/thanks/{form_id}` page. (`generate_form_snippet` produces this HTML — or a React component — for a form you own.)
+Use that absolute production URL as the `action`, **never** a local or app-relative path — even when the site is running on `localhost` in development (`localhost` is an allowed submit origin, so the production endpoint works there too). Routing the submission through your app's own configurable API base is the mistake that silently posts to the wrong host in dev.
+
+A browser submission is accepted when its `Origin` is in `allowed_origins` (`localhost` is always allowed for local testing). A plain HTML form post (the browser sends `Accept: text/html`) is redirected to a hosted `/thanks/{form_id}` page. (`generate_form_snippet` produces this HTML — or a React component — for a form you own.)
 
 ## Fill in a form (submit on a user's behalf)
 
