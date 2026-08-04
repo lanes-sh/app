@@ -12,6 +12,11 @@
       "description": "Skills and setup commands for the Lanes desktop app: issue board, sessions, and local MCP"
     },
     {
+      "name": "lanes",
+      "source": "./plugins/lanes-desktop",
+      "description": "DEPRECATED alias for lanes-desktop — kept so installs predating the rename can still update. Install lanes-desktop instead; this entry will be removed in a future release."
+    },
+    {
       "name": "lanes-forms",
       "source": "./plugins/lanes-forms",
       "description": "Provision Lanes Forms endpoints and fill them in on a user's behalf"
