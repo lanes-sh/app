@@ -27,16 +27,16 @@ Before doing anything, sanity-check that the Lanes MCP is reachable:
 | Group | Tool | Purpose |
 |---|---|---|
 | Issues | `lanes_list_issues` | Filter by `step` / `tags` (any-match) / `componentId` / `search`. |
-| | `lanes_get_issue` | Full details by `id`. |
+| | `lanes_get_issue` | Full details by `id`. Does **not** include sessions. |
 | | `lanes_create_issue` | Required: `title`. |
 | | `lanes_update_issue` | Patch by `id`; pass `null` to clear nullable fields. |
 | | `lanes_delete_issue` | By `id`. Permanent. |
 | | `lanes_move_issue` | Shorthand for `update_issue` with only `step`. |
-| Sessions | `lanes_start_session` | Required: `issueId`. Spawns Claude Code (default), Codex, or `shell`. |
+| Sessions | `lanes_start_session` | Required: `issueId`. Spawns Claude Code (default), Codex, or `shell`. **Always adds a new session**; returns its slot + UUID. |
 | | `lanes_stop_session` | Stop a session for `issueId`. Optional `session` (UUID/slot/name) to disambiguate when >1. |
 | | `lanes_resume_session` | Re-attach Claude to a stopped session. **Claude-only.** Optional `session`. |
 | | `lanes_delete_session` | Permanently delete a session (stops it first if running). Optional `session`. |
-| | `lanes_get_session_status` | With `issueId`: bare array of every session for that issue. Without: envelope `{ sessions, appliedFilters, truncated, totalAvailable }` capped at 20. |
+| | `lanes_get_session_status` | With `issueId`: bare array of every session for that issue (status under both `status` and `runtimeStatus`). Without: envelope `{ sessions, appliedFilters, truncated, totalAvailable }` capped at 20. |
 | History | `lanes_get_issue_changes` | `git diff` for the issue's cwd, by `id`. |
 | | `lanes_get_issue_history` | Paginated Claude conversation history, by `id`. Use `cliSessionId` to pick when an issue has multiple Claude sessions. |
 | | `lanes_read_terminal` | Last `lines` (default 200, max 2000) of PTY scrollback. Optional `session`. |
@@ -60,7 +60,20 @@ Session-aware tools (`lanes_stop_session`, `lanes_resume_session`, `lanes_delete
 - **One session for the issue** → tool proceeds against it. Happy path is unchanged.
 - **Multiple sessions** → tool returns an **MCP success result** (not an error) whose text starts `"Issue N has multiple sessions…"` and whose `_meta.sessions` array lists each candidate as `{ sessionUuid, slot, name, runtimeStatus, cli, cliSessionId, createdAt }`. Pick one (ask the user if not obvious) and retry with `session` set to its slot, name, or UUID.
 
+`lanes_get_session_status` is the read side and takes **no** `session` param. With `issueId` it returns a bare array of *every* session for that issue; each entry carries the runtime status under both `status` and `runtimeStatus` (same value, two keys). Filter that array yourself by slot / UUID.
+
+`lanes_start_session` **always creates a new session.** It is never a way to re-attach or to "make sure" one is running — each call adds another slot. To re-attach, use `lanes_resume_session`.
+
 `lanes_resume_session` is the **only** way to re-attach a stopped Claude session. Do **not** pass `--resume`, `--continue`, `--session-id`, or `--fork-session` to `lanes_start_session` — those flags are hard-rejected. Codex and shell sessions have no resume semantics; start fresh.
+
+### Starting is asynchronous
+
+`lanes_start_session` hands the launch to the Lanes app and waits up to ~10s for the new session to register, then returns its slot and UUID. Two things follow:
+
+- **A response that says it could not confirm is not a failure.** The launch may still be in flight — worktree creation runs a real `git worktree add`, and if the issue has no usable cwd Lanes opens a folder picker and waits on the user indefinitely. Read `lanes_get_session_status { issueId }`, or ask the user to look at the Lanes window.
+- **An empty session list is not proof the start failed.** In the window before the session registers, `lanes_get_session_status` returns `[]` and the session-aware tools return `"No sessions exist for issue N yet"`. Both are expected. Wait and re-read.
+
+Never re-issue `lanes_start_session` to check on a previous one. That is how you end up with five identical sessions on one issue.
 
 `cliSessionId` (the CLI's own resume token — for Claude, the `--resume <uuid>` value) is distinct from `session_uuid` (the Lanes ref used in `session`). `lanes_get_issue_history` and `lanes_get_session_stats` disambiguate via `cliSessionId`; everything else uses `session`. Don't conflate them.
 
@@ -98,8 +111,10 @@ Session-aware tools (`lanes_stop_session`, `lanes_resume_session`, `lanes_delete
      worktreeName: "feat/short-slug"
    }
 3. lanes_start_session { issueId, planMode: true }   // or omit planMode for implement-mode
-4. lanes_get_session_status { issueId }              // confirm it actually started
+                                                    // → returns the new slot + sessionUuid
 ```
+
+Step 3 already tells you the slot it started; there is no separate confirmation step. If you do want to double-check, read `lanes_get_session_status { issueId }` and look for **that** slot — do not call `lanes_start_session` again.
 
 ### Batch-launch the backlog in plan mode
 
@@ -158,3 +173,7 @@ Only works for `cli: "claude"` sessions that recorded a `cliSessionId`. Codex/sh
 - ❌ Passing `--resume`, `--continue`, `--session-id`, or `--fork-session` to `lanes_start_session`. These are rejected — use `lanes_resume_session` to re-attach a stopped Claude session.
 - ❌ Treating the ambiguity response from `lanes_stop_session` / `lanes_resume_session` / `lanes_delete_session` / `lanes_read_terminal` as an error. It's a normal MCP success result with `_meta.sessions` — pick a candidate and retry with `session` set.
 - ❌ Confusing `cliSessionId` with `session`. `cliSessionId` is the CLI's own resume token (only consumed by `lanes_get_issue_history` and `lanes_get_session_stats`); `session` is the Lanes ref (UUID / slot / name) used by stop / resume / delete / read_terminal.
+- ❌ **Re-calling `lanes_start_session` because you could not find the session you just started.** The launch is asynchronous and every call spawns *another* session. This is the single worst failure mode with these tools — it silently produces a pile of duplicate sessions on one issue. Read `lanes_get_session_status { issueId }` instead, and wait if it comes back empty.
+- ❌ Treating `"No sessions exist for issue N yet"` as a cue to start a session. Inside the launch window it is the expected answer for a session that is starting normally.
+- ❌ Using `lanes_get_issue` to check whether a session started. It does not return sessions — `lanes_get_session_status` does.
+- ❌ Looking for only one of `status` / `runtimeStatus` on a session entry and concluding the session is broken when it's absent. Both keys are present and carry the same value.

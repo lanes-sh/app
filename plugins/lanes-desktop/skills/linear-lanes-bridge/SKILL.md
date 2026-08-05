@@ -11,6 +11,8 @@ This skill assumes the **`lanes-sessions`** skill is also available — it cover
 
 When a Lanes issue hosts more than one CLI session, follow the multi-session disambiguation rules in `lanes-sessions` (pass `session` on stop / resume / read_terminal). Bridge tools (`lanes_linear_*`) never address sessions directly.
 
+`lanes_start_session` always **adds** a session, and its launch is asynchronous. In the batch flows below, call it exactly once per issue and record the slot it returns. Never re-call it because a session looks missing — an empty status read inside the launch window is expected. See "Starting is asynchronous" in `lanes-sessions`.
+
 ## When to use
 
 - Work originates in Linear and you want Claude Code to do the actual implementation locally.
