@@ -18,7 +18,7 @@ Before doing anything, sanity-check that the Lanes MCP is reachable:
 - Call `lanes_list_components`. If it returns an array (possibly empty), you're good.
 - If the tool isn't available at all, the MCP isn't installed. Tell the user to run the `/lanes:setup-mcp` slash command (shipped alongside this skill) or, if they have raw skills only, run:
   ```
-  claude mcp add --transport sse lanes-local http://localhost:5353/sse --scope user
+  claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
   ```
   Then restart Claude Code so the new MCP loads. Lanes itself must also be running (the desktop app must be open).
 

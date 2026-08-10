@@ -80,13 +80,24 @@ Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 
 | | |
 |---|---|
-| **Server name** | `lanes-local` (legacy `lanes` still works) |
+| **Server name** | `lanes-desktop` (older `lanes-local` and `lanes` entries still work; see [Renamed from `lanes-local`](#renamed-from-lanes-local)) |
 | **Transport** | SSE (Server-Sent Events) |
 | **Endpoint** | `http://localhost:5353/sse` |
 | **Protocol version** | `2024-11-05` |
 | **Server version** | `1.0.0` |
 | **Tool count** | 30 (18 workspace + 6 GitHub + 6 Linear) |
 | **Auth** | None — localhost-only, never leaves your machine |
+
+### Renamed from `lanes-local`
+
+The server used to register as `lanes-local`, and before that as bare `lanes`. Both keep working, and you do not need to reconnect.
+
+An MCP server's config name is also the prefix on its tool names, so a rename would normally reset every permission you had granted. It doesn't:
+
+- **`lanes-local`** is renamed to `lanes-desktop` automatically the next time the Lanes desktop app launches, and your `mcp__lanes-local__*` grants in `~/.claude.json` and `~/.claude/settings.json` are rewritten along with it. Cursor is the exception — the app never writes Cursor's config, so `/lanes-desktop:setup-mcp` does that rename instead.
+- **`lanes`** is left alone, because the hosted [Lanes Forms](https://lanes.sh/docs/forms) MCP uses that name too. Rename it from **Settings > Local MCP** when you're ready.
+
+Permissions granted in a project's own `.claude/settings.local.json` live in your repos rather than your home directory, so they aren't rewritten. Update them by hand or re-approve when prompted.
 
 ### Tools
 
@@ -166,7 +177,7 @@ npx skills add lanes-sh/app
 [skills.sh](https://skills.sh) installs only the SKILL.md files. To also enable the desktop MCP, run:
 
 ```
-claude mcp add --transport sse lanes-local http://localhost:5353/sse --scope user
+claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
 ```
 
 then restart Claude Code. Lanes itself must be running (the desktop app open) for the MCP endpoint to respond.
