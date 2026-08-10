@@ -88,7 +88,7 @@ One short paragraph covering: per-client registration status (Claude Code, Curso
 
 Notes:
 - New installs register the local server as `lanes-desktop`. It previously shipped as `lanes-local`, and before that as bare `lanes`; both keep working.
-  - In Claude Code and Codex, the Lanes app renames `lanes-local` itself at launch, and moves the `mcp__lanes-local__*` tool permissions with it so nothing needs re-approving. In Cursor, this command does the rename (step 3.2) because the app never touches Cursor's config.
+  - In Claude Code and Codex, the Lanes app renames `lanes-local` itself at launch, and carries the tool approvals across so nothing needs re-approving (Claude Code's `mcp__lanes-local__*` grants get rewritten; Codex's are already nested under the server entry and move with it). In Cursor, this command does the rename (step 3.2) because the app never touches Cursor's config.
   - Bare `lanes` is never renamed automatically anywhere, because the remote Lanes Forms server uses that name. Point the user at Lanes Settings → Local MCP if they want to move it.
 - Don't overwrite an existing MCP entry's *value* without asking. The user may have customised the URL. Renaming a key while preserving its value is fine, and is what step 3.2 does.
 - The SSE endpoint is local-only (no auth, never leaves the machine). Don't expose `localhost:5353` over the network.
