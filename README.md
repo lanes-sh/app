@@ -90,14 +90,16 @@ Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 
 ### Renamed from `lanes-local`
 
-The server used to register as `lanes-local`, and before that as bare `lanes`. Both keep working, and you do not need to reconnect.
+The server used to register as `lanes-local`, and before that as bare `lanes`. Both keep working indefinitely, and **nothing is renamed unless you ask for it** — an MCP server's config name is also the prefix on its tool names, so renaming it resets every permission you had granted and breaks anything referring to the server by name.
 
-An MCP server's config name is also the prefix on its tool names, so a rename would normally reset every permission you had granted. It doesn't:
+When you do want the new name, **Settings > Local MCP** shows a button per agent:
 
-- **`lanes-local`** is renamed to `lanes-desktop` automatically the next time the Lanes desktop app launches. In Claude Code, your `mcp__lanes-local__*` grants in `~/.claude.json` and `~/.claude/settings.json` are rewritten along with it. In Codex, per-tool approvals are already nested under the server entry, so they move with it. Cursor is the exception — the app never writes Cursor's config, so `/lanes-desktop:setup-mcp` does that rename instead.
-- **`lanes`** is left alone, because the hosted [Lanes Forms](https://lanes.sh/docs/forms) MCP uses that name too. Rename it from **Settings > Local MCP** when you're ready.
+- **`lanes-local`** → `lanes-desktop`, carrying your permissions across. In Claude Code, your `mcp__lanes-local__*` grants in `~/.claude.json` and `~/.claude/settings.json` are rewritten to match. In Codex, per-tool approvals are already nested under the server entry, so they move with it. Restart the agent afterwards.
+- **`lanes`** → `lanes-desktop`, which frees `lanes` for the hosted [Lanes Forms](https://lanes.sh/docs/forms) MCP. Permissions are *not* carried across here: `mcp__lanes__*` is ambiguous between the two servers, so you re-approve when prompted.
 
-Permissions granted in a project's own `.claude/settings.local.json` live in your repos rather than your home directory, so they aren't rewritten. Update them by hand or re-approve when prompted.
+Removing and re-adding the connection by hand also works, and gets the new name. Cursor is renamed that way only — the desktop app never writes Cursor's config, and `/lanes-desktop:setup-mcp` deliberately leaves existing entries alone.
+
+Permissions granted in a project's own `.claude/settings.local.json` live in your repos rather than your home directory, so they aren't rewritten either way. Update them by hand or re-approve when prompted.
 
 ### Tools
 
