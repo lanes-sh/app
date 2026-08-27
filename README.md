@@ -2,9 +2,14 @@
 
 <p align="center">
   <h1 align="center">Lanes</h1>
-  <p align="center"><strong>Mission control for AI coding agents.</strong></p>
-  <p align="center">Track, orchestrate, and ship across multiple AI CLI sessions from one place.</p>
-  <p align="center"><a href="#install">Quick start</a></p>
+  <p align="center"><strong>The agentic development environment.</strong></p>
+  <p align="center">Run many AI coding agents in parallel lanes: issues, worktrees, sessions, one board.</p>
+  <p align="center">
+    <a href="#install">Install</a> ·
+    <a href="https://lanes.sh/docs/desktop/quick-start">Quickstart</a> ·
+    <a href="https://lanes.sh/docs">Docs</a> ·
+    <a href="https://discord.gg/B3f8QjqeBa">Discord</a>
+  </p>
 </p>
 
 <br>
@@ -15,19 +20,17 @@
 
 <br>
 
-## You lost track three agents ago.
+## You lost track three agents ago
 
-You have five AI coding agents running across eight terminal tabs. One is waiting for input. One finished ten minutes ago and you didn't notice. Two are doing overlapping work. The only thing keeping it all together is your short-term memory, and it just failed.
+Five agents, eight terminal tabs. One is waiting for input. One finished ten minutes ago and nobody noticed. Two are quietly doing the same work. The only thing holding it together is your short-term memory, and it just failed.
 
-AI agents got powerful. The workflow around them didn't.
+Agents got good at writing code. Nothing got good at keeping track of them.
 
-## Lanes fixes that.
+## Lanes is that layer
 
-Lanes is a native desktop app that puts every AI coding session on an issue board. Each card is a task. Each task can have a live agent terminal attached. You see what's running, what's blocked, what's waiting, and what shipped, in one window, at a glance.
+Lanes is a native macOS app that puts every agent session on an issue board. Each card is a task. Each task can hold live agent terminals, its own git worktree, and the diff those agents produced. You see what is running, what is blocked, what is waiting on you, and what shipped, in one window.
 
-No context switching. No lost terminals. No wondering what that tab was doing. Just drag work through your pipeline while your agents execute.
-
-It's the layer that was missing between you and your fleet of AI agents.
+Drag work through your pipeline while your agents execute, then review it without leaving the window: the diff, the editor, the database, the commit, the pull request. No tab archaeology. No lost terminals. No wondering which session was doing what.
 
 ## Install
 
@@ -35,181 +38,262 @@ It's the layer that was missing between you and your fleet of AI agents.
 brew install --cask lanes-sh/lanes/lanes && open -a Lanes
 ```
 
-Requires macOS Ventura or later. Native on Apple Silicon and Intel.
+Requires macOS Ventura or later. Universal binary, native on Apple Silicon and Intel. Lanes checks for updates on launch and updates itself, and you can check manually under **Settings > General > Updates**.
 
-**Join our [Discord community](https://discord.gg/B3f8QjqeBa)** for updates, to share feedback, ask questions, and connect with other users. We're iterating fast and Discord is the best way to stay in the loop.
+New here? The **[Quickstart](https://lanes.sh/docs/desktop/quick-start)** takes you from `brew install` to a first agent session.
 
-## Features
+**Join the [Discord](https://discord.gg/B3f8QjqeBa)** for updates, feedback and questions. We iterate fast, and it is the best place to stay in the loop.
 
-### Issue Board
-Drag issues through workflow columns, Planning, Implementation, Review, Done, plus Backlog and Misc. Multi-select with Shift+Click and Cmd+Click for bulk operations. Right-click context menus, sorting options, and collapsible columns. Board tabs scoped per project directory and worktree.
+## What you get
 
-### Live Embedded Terminals
-Every issue runs an AI session in a real PTY-backed terminal. Start sessions in plan mode or implement mode. Resume Claude sessions across restarts. Drag files onto the terminal to inject paths. Real-time status detection: busy, awaiting input, stopped, exited, error.
+### The board
 
-### Worktree Management
-Auto-create git worktrees per issue with generated branch names, or select existing worktrees. Status overview in the status bar showing uncommitted and unmerged state. Auto-cleanup on issue completion. Per-project base branch detection with manual override.
+- **Drag issues through your workflow.** The default is Planning, Implementation, Review and Done, plus Backlog and Misc, and the steps are configurable.
+- **Bulk operations.** Multi-select with Shift+Click and Cmd+Click, right-click menus, sorting by newest, recently updated or alphabetical, and collapsible columns.
+- **Board tabs** scoped per project directory and worktree, so two repos never bleed into each other.
+- **Labels and filters.** 13 label colors, and filtering by label, working directory or workflow step.
+- **Dependencies** with cycle detection, so a dependent card stays blocked until every prerequisite reaches Done.
+- **Attachments** with inline image previews.
+- **Per-repo configuration.** Labels, CLI flags and quick commands live in `.lanes/` next to your code.
 
-### Labels & Filtering
-Create, rename, and assign labels with 13 color options. Filter the board by label, working directory, or workflow step. Clear all filters in one action.
+### Sessions
 
-### Dependencies
-Link issues as dependencies via a multi-select picker. Cycle detection prevents circular chains. Dependent issues stay blocked until all prerequisites reach Done.
+- **Real terminals.** Every issue runs its agent sessions in PTY-backed terminals, and one issue can host **several at once**: slots, names and branch-off siblings, so a single card holds the plan-mode session and the two implementation runs it spawned.
+- **Plan mode or implement mode**, with the model and reasoning effort chosen per session.
+- **Resume across restarts.** Close the app, come back, pick the session up where it left off.
+- **Live status** read from what the CLI writes to disk: busy, awaiting input, stopped, exited, error.
+- **Token usage per session**, split into input, output, cache created and cache read, next to a browsable history of the conversation.
+- **Drag files onto a terminal** to inject their paths.
+- **Completion sounds** when a session wants you, and **Keep Awake** so a long run does not die to a sleeping laptop.
 
-### Quick Commands
-Preset and custom commands with keyboard shortcuts Cmd+Alt+1–9. Two types: `claude` (injected into CLI session) and `terminal` (run as shell command). Built-in defaults shipped with new installs, fully customizable in Settings.
+### Models and harnesses
 
-### File Browser & Editor
-Sidebar file tree for the selected issue's working directory. Monaco editor with tabbed editing, dirty file tracking, syntax highlighting, and save on Cmd+S.
+**Claude Code** and **OpenAI Codex** are first-class: Lanes detects them, reads their state, resumes their sessions and lists their current models. Anything else can run as a plain shell session in the same terminal.
 
-### Git Integration
-Diff view with two modes: Changes (uncommitted working tree diff) and History (committed diffs). Monaco-powered inline diff viewer. Automatic branch detection from the issue's worktree.
+- **[Harness](https://lanes.sh/docs/desktop/harness)** tells you whether the CLI Lanes is about to launch is on your PATH, what version it reports, which package manager installed it, and whether a newer one exists. Updates go through the manager that actually installed it, which matters because a bun or pnpm global install will happily ignore an `npm install -g`.
+- **[Gateway](https://lanes.sh/docs/desktop/gateway)** points a session at a model provider of your choosing, with presets for Ollama, LM Studio, vLLM, OpenRouter and z.ai GLM. A profile is applied as real process environment when the session starts, so the request goes straight from the CLI to your provider and Lanes is never in the request path. Research preview.
+- **[Local LLMs](https://lanes.sh/docs/desktop/local-llms)** drives Ollama end to end: install, start, stop, pull and remove models, browse the library, and see which models actually fit your RAM before you spend the download. On pull it bakes a context window sized to your machine, because a real session sends roughly 38,000 tokens of harness and tool definitions before you type anything. Research preview.
 
-### Process Manager
-Discover running CLI processes across the system. Three-way classification: Tracked (managed by Lanes), Orphan (has issue ID but no active session), External (unrelated). Kill individual processes or stop all sessions at once.
+All three live under **Settings > Agentic Coding**.
 
-### Works with
+### Your apps, memory and skills
 
-**Claude Code**, Anthropic's CLI for Claude.
+Give every agent your apps, memory and skills. [Lanes Link](https://lanes.sh/link) is one endpoint you run: GitHub, Linear, Gmail, memory and skills, behind one set of permissions.
 
-Support for Codex CLI, Gemini CLI, and other terminal-based AI tools is on the roadmap.
+- **Connect once, use everywhere.** Around twenty providers including GitHub, Linear, Gmail, Drive, Notion and Slack, plus any MCP server, any REST API with an OpenAPI spec, any IMAP mailbox, any CalDAV server.
+- **Memory and skills as plain Markdown**, so what an agent knows about you follows it between sessions and between tools.
+- **Permissions enforced at dispatch**, not asked of the model. `gmail.search` allowed with `gmail.send` denied holds regardless of what the prompt says, and every call lands in an append-only audit log.
+- **Profiles** keep work and personal credentials, memory and policy apart.
+- **Credentials never reach the agent.** Requests go from your machine straight to the provider.
 
-## Local MCP Server
+Run it yourself with `bun install -g @lanes-sh/link`. Free and open source at [github.com/lanes-sh/link](https://github.com/lanes-sh/link).
 
-Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io) server so agents like Claude Code and Codex can read your board and drive sessions directly. Enable it in **Settings > Local MCP**, then click **Connect Claude Code** or **Connect Codex** for one-click config injection.
+### The workbench around them
+
+- **A git client, not just a diff.** The Changes tab has a repository and branch header, a commit box, one button that publishes, pulls or pushes as needed, per-file and full discard, branch switching, and a History tab that can undo the last unpushed commit. Commit, push and open a pull request straight from the issue panel.
+- **Worktrees** created per issue with generated branch names, or pick an existing one. Uncommitted and unmerged state in the status bar, auto-cleanup on completion, per-project base branch detection with manual override.
+- **A real editor.** Monaco, with a file tree, tabbed editing, dirty tracking, syntax highlighting, markdown preview and save on Cmd+S, plus a Working Folder pane scoped to the project you are on.
+- **A database browser** that finds the SQLite files in your project, lists tables and views, and runs read-only SQL. Checking whether a migration did what the agent claimed is two clicks.
+- **Git identity switching**, so work in a client repo is not attributed to your personal account, and a clone dialog for starting fresh.
+- **A process manager** that discovers running CLI processes system-wide and sorts them into tracked, orphaned and external. Kill one, or stop every session at once.
+- **Quick commands** on Cmd+Alt+1 to 9, either injected into the agent session or run as a shell command.
+- **Deep links.** `lanes://new?prompt=...` from Linear, GitHub or your own tooling opens a new issue ready to run.
+
+### Your team
+
+- **Local or remote workspaces.** A remote workspace syncs issues, chat and presence in about two seconds.
+- **Members and assignees.** Manage who is in the workspace, and put a name on each issue.
+- **Presence avatars**, so you can see who is looking at what.
+- **In-app chat**, scoped to the workspace.
+- **Honest sync state.** Reconnects back off gracefully, and a banner tells you when sync is degraded rather than pretending everything is fine.
+
+### Integrations
+
+- **GitHub and Linear over OAuth.** Browse repos, teams and issues from inside Lanes.
+- **Multi-select import** pulls tickets onto the board, so a whole sprint can run locally.
+- **Push the result back** as a comment once the work is done.
+- **Agents can drive the same integrations** over MCP, without you leaving chat.
+
+## For agents
+
+Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io) server so Claude Code, Codex and other MCP clients can read your board and drive sessions directly. Enable it under **Settings > Lanes MCP**, then use **Connect Claude Code** or **Connect Codex** for one-click config injection.
 
 | | |
 |---|---|
-| **Server name** | `lanes-desktop` (older `lanes-local` and `lanes` entries still work; see [Renamed from `lanes-local`](#renamed-from-lanes-local)) |
-| **Transport** | SSE (Server-Sent Events) |
-| **Endpoint** | `http://localhost:5353/sse` |
+| **Server name** | `lanes-desktop` |
+| **Transport** | SSE and Streamable HTTP, on the same URL |
+| **Endpoint** | `http://localhost:5353/sse` (port configurable) |
 | **Protocol version** | `2024-11-05` |
 | **Server version** | `1.0.0` |
-| **Tool count** | 30 (18 workspace + 6 GitHub + 6 Linear) |
-| **Auth** | None — localhost-only, never leaves your machine |
+| **Tools** | 30: 18 workspace, 6 GitHub, 6 Linear |
+| **Auth** | None. Localhost only, and nothing leaves your machine |
 
-### Renamed from `lanes-local`
+Setup, example prompts and the full parameter schemas live in the [Lanes Desktop MCP docs](https://lanes.sh/docs/desktop/local-mcp), which also covers the older `lanes-local` and bare `lanes` registrations: both keep working indefinitely, and nothing is renamed unless you ask for it.
 
-The server used to register as `lanes-local`, and before that as bare `lanes`. Both keep working indefinitely, and **nothing is renamed unless you ask for it** — an MCP server's config name is also the prefix on its tool names, so renaming it resets every permission you had granted and breaks anything referring to the server by name.
+<details>
+<summary><strong>All 30 tools</strong></summary>
 
-When you do want the new name, **Settings > Local MCP** shows a button per agent:
-
-- **`lanes-local`** → `lanes-desktop`, carrying your permissions across. In Claude Code, your `mcp__lanes-local__*` grants in `~/.claude.json` and `~/.claude/settings.json` are rewritten to match. In Codex, per-tool approvals are already nested under the server entry, so they move with it. Restart the agent afterwards.
-- **`lanes`** → `lanes-desktop`, which frees `lanes` for the hosted [Lanes Forms](https://lanes.sh/docs/forms) MCP. Permissions are *not* carried across here: `mcp__lanes__*` is ambiguous between the two servers, so you re-approve when prompted.
-
-Removing and re-adding the connection by hand also works, and gets the new name. Cursor is renamed that way only — the desktop app never writes Cursor's config, and `/lanes-desktop:setup-mcp` deliberately leaves existing entries alone.
-
-Permissions granted in a project's own `.claude/settings.local.json` live in your repos rather than your home directory, so they aren't rewritten either way. Update them by hand or re-approve when prompted.
-
-### Tools
-
-#### Issues
+**Issues**
 
 | Tool | Description |
 |---|---|
-| `lanes_list_issues` | List issues from the Lanes board with optional filters (step, tags, componentId, search). |
-| `lanes_get_issue` | Get a single issue by its numeric ID, including full details and session history. |
-| `lanes_create_issue` | Create a new Lanes issue. Returns the created issue with its assigned ID. |
-| `lanes_update_issue` | Patch an existing issue. Only the fields you supply are updated. |
+| `lanes_list_issues` | List issues from the board with optional filters (step, tags, componentId, search). |
+| `lanes_get_issue` | Get a single issue by numeric ID, including full details and session history. |
+| `lanes_create_issue` | Create an issue. Returns it with its assigned ID. |
+| `lanes_update_issue` | Patch an issue. Only the fields you supply change. |
 | `lanes_delete_issue` | Permanently delete an issue and all its attachments. |
 | `lanes_move_issue` | Move an issue to a different board column. |
 
-#### Sessions
+**Sessions**
 
 | Tool | Description |
 |---|---|
-| `lanes_start_session` | Start a Claude Code, Codex, or shell session for an issue. Handles worktree creation, plan mode, custom prompts, and extra CLI flags or env vars. |
-| `lanes_stop_session` | Stop the running terminal session for an issue. |
-| `lanes_resume_session` | Re-attach to a stopped Claude or Codex session (the UI 'Resume Session' button). Disambiguate with an optional `session` (UUID / slot / name). |
-| `lanes_delete_session` | Permanently delete a session: stops it if still running, then removes the record. |
-| `lanes_get_session_status` | Get status (running/stopped, CLI tool, timestamps, PTY state) for all sessions, or filter to one issue. |
-| `lanes_delete_worktree` | Remove the git worktree created for an issue's session. |
+| `lanes_start_session` | Start a session for an issue. **Always creates a new one** and never re-attaches, so never call it twice to check whether the first call worked. Handles worktree creation, plan mode, prompt injection, extra flags and env vars. `cli='shell'` gives a plain terminal with no prompt injection. |
+| `lanes_stop_session` | Stop a running terminal session. |
+| `lanes_resume_session` | Re-attach to a stopped Claude or Codex session, preserving its transcript and slot label. Disambiguate with `session` (UUID, slot or name). |
+| `lanes_delete_session` | Stop a session if it is still running, then delete the record. |
+| `lanes_get_session_status` | Status for every session, or just one issue's: slot, name, CLI, PID, PTY state, timestamps, runtime status. An empty result right after a start means the launch has not registered yet, not that it failed. |
+| `lanes_delete_worktree` | Remove a worktree under `.worktrees/{name}` and, by default, delete its branch. Addressed by project path and worktree name, not by issue ID, and it does not cascade to issues that reference it. |
 
-#### History and progress
-
-| Tool | Description |
-|---|---|
-| `lanes_get_issue_changes` | Get the list of files changed (git diff) in the issue's working directory. |
-| `lanes_get_issue_history` | Get Claude session conversation history for an issue, paginated. |
-| `lanes_read_terminal` | Read the last N lines of terminal scrollback for a session. Works with any CLI; ANSI codes stripped. |
-| `lanes_get_session_stats` | Get token usage and tool usage stats for an issue's Claude session. |
-
-#### Metadata
+**History and progress**
 
 | Tool | Description |
 |---|---|
-| `lanes_list_labels` | List all board labels (UUID, name, color). Call before tagging to resolve names to UUIDs. |
-| `lanes_list_components` | List all project components (UUID, name, project ID). Call before setting componentId. |
+| `lanes_get_issue_changes` | Files changed (git diff) in the issue's working directory. The fastest way to review what an agent actually did. |
+| `lanes_get_issue_history` | Conversation history for a Claude or Codex session on the issue, paginated. |
+| `lanes_read_terminal` | The last N lines of terminal scrollback for a session. Works with any CLI, ANSI codes stripped. |
+| `lanes_get_session_stats` | Token usage (input, output, cache), model breakdown, tool call counts and duration for a Claude or Codex session. |
 
-Full parameter schemas and example prompts: [lanes.sh/docs/local-mcp](https://lanes.sh/docs/local-mcp).
+**Metadata**
 
-## Claude Code Skills
+| Tool | Description |
+|---|---|
+| `lanes_list_labels` | Every board label (UUID, name, color). Call this before tagging, since tags are UUIDs. |
+| `lanes_list_components` | Every project component (UUID, name, project ID). Call this before setting `componentId`. |
 
-This repo is also a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces) with two plugins.
+**GitHub**, once GitHub is connected in Lanes settings
 
-**`lanes-desktop`** — skills and a setup command for driving the Lanes desktop app (the issue board and its local MCP) from Claude Code:
+| Tool | Description |
+|---|---|
+| `lanes_github_list_repos` | Repos the connected user can access, most recently pushed first. |
+| `lanes_github_list_issues` | Open issues in a repo, newest-updated first. PRs filtered out, capped at 50. |
+| `lanes_github_search_issues` | Free-text search a repo's open issues. A bare number is treated as an issue number and prepended to the results. |
+| `lanes_github_get_issue` | One issue by number, in the canonical `ExternalIssue` shape. |
+| `lanes_github_create_issue` | Open a new issue. Labels are GitHub label names, not IDs. |
+| `lanes_github_comment_on_issue` | Comment on an issue or a PR. |
 
-- **`lanes-sessions`** — the lanes_* tools through chat: creating issues, starting/inspecting sessions, batch-launching, worktrees, terminal output, label/component lookups. See [`plugins/lanes-desktop/skills/lanes-sessions/SKILL.md`](plugins/lanes-desktop/skills/lanes-sessions/SKILL.md).
-- **`github-lanes-bridge`** / **`linear-lanes-bridge`** — importing GitHub or Linear issues into Lanes for local execution, decomposing tickets, and pushing PR links / comments back. See [`plugins/lanes-desktop/skills/`](plugins/lanes-desktop/skills/).
-- **`/lanes:setup-mcp`** — slash command that connects Claude Code to the running Lanes app and verifies the SSE endpoint is live.
+**Linear**, once Linear is connected in Lanes settings
 
-**`lanes-forms`** — a skill for [Lanes Forms](https://forms.lanes.sh): provision a live form endpoint with one POST (no signup), and fill in a form on a user's behalf. See [`plugins/lanes-forms/skills/lanes-forms/SKILL.md`](plugins/lanes-forms/skills/lanes-forms/SKILL.md).
+| Tool | Description |
+|---|---|
+| `lanes_linear_list_teams` | Teams the connected user can access. |
+| `lanes_linear_list_issues` | Open issues in a team, newest-updated first, capped at 50. |
+| `lanes_linear_search_issues` | Search a team's issues by title, description, or issue number. |
+| `lanes_linear_get_issue` | One issue by UUID, in the canonical `ExternalIssue` shape. |
+| `lanes_linear_create_issue` | Open a new issue in a team. |
+| `lanes_linear_comment_on_issue` | Comment on an issue. |
 
-### Install (recommended: plugin)
+These descriptions track the server's `tools/list` response, which any MCP client can call against the endpoint for the full JSON schemas.
 
-In any Claude Code session:
+</details>
+
+<details>
+<summary><strong>Claude Code plugins and skills</strong></summary>
+
+This repo doubles as a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces). In any Claude Code session:
 
 ```
 /plugin marketplace add lanes-sh/app
-/plugin install lanes-desktop@lanes   # the issue board + MCP
+/plugin install lanes-desktop@lanes   # the issue board and its MCP
 /plugin install lanes-forms@lanes     # Lanes Forms
-/lanes:setup-mcp                       # desktop only: register the MCP
+/lanes:setup-mcp                      # desktop only: register the MCP
 ```
 
-Install whichever plugin you need (or both). `/lanes:setup-mcp` applies to `lanes-desktop`. Updates: `/plugin marketplace update lanes`. Each plugin is versioned via its `.claude-plugin/plugin.json`.
+Install whichever you need, and update with `/plugin marketplace update lanes`.
 
-> Renamed in a recent release: the old single `lanes` plugin is now `lanes-desktop`. If you installed `lanes@lanes` before, install `lanes-desktop@lanes` (and `lanes-forms@lanes` if you want Forms) again.
+**[`lanes-desktop`](plugins/lanes-desktop)** drives the board from chat:
 
-### Install (alternative: skills.sh)
+| Skill | What it covers |
+|---|---|
+| [`lanes-sessions`](plugins/lanes-desktop/skills/lanes-sessions/SKILL.md) | The `lanes_*` tools and the multi-session model: creating issues, starting and inspecting sessions, batch-launching across worktrees, reading terminal output, resolving labels and components. |
+| [`github-lanes-bridge`](plugins/lanes-desktop/skills/github-lanes-bridge/SKILL.md) | Import a GitHub ticket or a whole sprint, decompose it into sub-issues with dependencies, then push PR links and comments back. |
+| [`linear-lanes-bridge`](plugins/lanes-desktop/skills/linear-lanes-bridge/SKILL.md) | The same loop for Linear, including sprint imports. |
+| `/lanes:setup-mcp` | Connects Claude Code and Cursor to the running app, and verifies the endpoint is live. |
+
+**[`lanes-forms`](plugins/lanes-forms/skills/lanes-forms/SKILL.md)** is separate from the desktop app: provision a live [Lanes Forms](https://lanes.sh/forms) endpoint with one POST and no signup, or fill in a form on someone's behalf.
+
+Installed the old single `lanes` plugin before it was split? Install `lanes-desktop@lanes` instead. The old name still resolves, so existing installs keep updating either way.
+
+</details>
+
+<details>
+<summary><strong>Setup without the plugin</strong></summary>
+
+[skills.sh](https://skills.sh) installs the SKILL.md files only:
 
 ```
 npx skills add lanes-sh/app
 ```
 
-[skills.sh](https://skills.sh) installs only the SKILL.md files. To also enable the desktop MCP, run:
+Then register the MCP yourself:
 
 ```
 claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
 ```
 
-then restart Claude Code. Lanes itself must be running (the desktop app open) for the MCP endpoint to respond.
+Restart Claude Code afterwards. Lanes has to be running for the endpoint to answer.
 
-## Auto-updates
+</details>
 
-Lanes checks for updates on launch and updates itself. You can also check manually in **Settings > About > Check Now**.
+<details>
+<summary><strong>Building loops</strong></summary>
 
-## Keyboard Shortcuts
+Once an agent can read session status and the diff that came out of it, you can stop prompting and start looping: start work, check it, advance the board, repeat until the goal is met or a human is needed.
+
+[Building Loops](https://lanes.sh/docs/desktop/loops) is the practical guide, and [Loop Engineering](https://lanes.sh/blog/loop-engineering-with-lanes) is the thinking behind it.
+
+</details>
+
+## Documentation
+
+- **[Quickstart](https://lanes.sh/docs/desktop/quick-start)** goes from install to a running agent session.
+- **[Desktop docs](https://lanes.sh/docs/desktop)** cover everything above in detail, including [the issue board](https://lanes.sh/docs/desktop/issue-board), [sessions](https://lanes.sh/docs/desktop/sessions), [worktrees](https://lanes.sh/docs/desktop/worktrees), [git integration](https://lanes.sh/docs/desktop/git-integration), [keyboard shortcuts](https://lanes.sh/docs/desktop/keyboard-shortcuts) and [settings](https://lanes.sh/docs/desktop/settings).
+- **[All Lanes docs](https://lanes.sh/docs)**, where [/docs/mcp](https://lanes.sh/docs/mcp) compares the three MCP servers we ship.
+
+## Part of Lanes
+
+Lanes is a family of products for building with agents. [Overview](https://lanes.sh/overview).
+
+- **[Lanes Desktop](https://lanes.sh/desktop)** is this repo: mission control for your agent sessions, on your Mac.
+- **[Lanes Link](https://lanes.sh/link)** is one MCP endpoint you run yourself, sitting between your agents and your accounts, memory, skills and secrets. Deny by default, enforced at dispatch, with an append-only audit log. See [Your apps, memory and skills](#your-apps-memory-and-skills) above. Free and open source: [github.com/lanes-sh/link](https://github.com/lanes-sh/link).
+- **[Lanes Forms](https://lanes.sh/forms)** gives you a live form endpoint from a single POST, with no signup. Submissions are captured from the first second, forwarded by email or webhook, and the form can be claimed into a dashboard later.
+- **[Lanes Compute](https://lanes.sh/compute)** is GPUs on demand, from a single A100 to multi-node H100 clusters over InfiniBand, billed per second. In limited early access, so request access on the page.
+- **[Managed Services](https://lanes.sh/services)** is our team building and operating it for you, with humans accountable for the result.
+
+## Under the hood
+
+Tauri 2, React 19, Rust and SQLite. Axum serves the MCP, `portable-pty` runs the terminals, xterm.js renders them, Monaco edits your files. Fast startup, low memory, native performance.
+
+Local-first by default: a local workspace keeps every issue, session and setting in SQLite on your machine, and your code never goes anywhere. Remote workspaces are opt-in and sync issues, chat and presence through our backend so a team can share a board. Crash reporting is opt-in too.
+
+## Keyboard shortcuts
 
 | Shortcut | Action |
 |---|---|
 | Cmd+N | New backlog issue |
 | Cmd+T | New Misc task |
+| Cmd+R | Move selected issue(s) to Review |
 | Cmd+D | Complete selected issue(s) |
+| Cmd+E | Remove selected issue(s) |
 | Cmd+, | Open Settings |
 | Cmd+S | Save file in editor |
 | Cmd+A | Select all in column, then all issues |
 | Cmd+Alt+1-9 | Run quick command by position |
+| Ctrl+Tab | Cycle panel tabs (add Shift to go back) |
 | Shift+Click | Range select issues |
 | Cmd/Ctrl+Click | Toggle individual issue selection |
+| Cmd+Enter | Confirm the open dialog |
 | Escape | Clear selection or close dialog |
-
-## Documentation
-
-[User Guide](https://lanes.sh/docs), everything you need to know to get the most out of Lanes
-
-## Built for developers who ship
-
-Tauri 2. React 19. SQLite. Local-first architecture. Your code and data never leave your machine. Fast startup, low memory footprint, native performance.
 
 ## License
 
