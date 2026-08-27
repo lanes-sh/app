@@ -128,6 +128,8 @@ Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 | **Tools** | 30: 18 workspace, 6 GitHub, 6 Linear |
 | **Auth** | None. Localhost only, and nothing leaves your machine |
 
+Setup, example prompts and the full parameter schemas live in the [Lanes Desktop MCP docs](https://lanes.sh/docs/desktop/local-mcp), which also covers the older `lanes-local` and bare `lanes` registrations: both keep working indefinitely, and nothing is renamed unless you ask for it.
+
 <details>
 <summary><strong>All 30 tools</strong></summary>
 
@@ -191,15 +193,12 @@ Lanes ships a built-in [Model Context Protocol](https://modelcontextprotocol.io)
 | `lanes_linear_create_issue` | Open a new issue in a team. |
 | `lanes_linear_comment_on_issue` | Comment on an issue. |
 
+These descriptions track the server's `tools/list` response, which any MCP client can call against the endpoint for the full JSON schemas.
+
 </details>
 
-These descriptions track the server's `tools/list` response, which any MCP client can call against the endpoint for the full JSON schemas. The [Lanes Desktop MCP docs](https://lanes.sh/docs/desktop/local-mcp) cover setup and example prompts, plus the older `lanes-local` and bare `lanes` registrations: both keep working indefinitely, and nothing is renamed unless you ask for it (see [Upgrading From an Older Name](https://lanes.sh/docs/desktop/local-mcp#upgrading-from-an-older-name)).
-
-### Loops
-
-Once an agent can read session status and the diff that came out of it, you can stop prompting and start looping: start work, check it, advance the board, repeat until the goal is met or a human is needed. [Building Loops](https://lanes.sh/docs/desktop/loops) is the practical guide, and [Loop Engineering](https://lanes.sh/blog/loop-engineering-with-lanes) is the thinking behind it.
-
-### Claude Code plugins
+<details>
+<summary><strong>Claude Code plugins and skills</strong></summary>
 
 This repo doubles as a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces). In any Claude Code session:
 
@@ -210,23 +209,50 @@ This repo doubles as a [Claude Code plugin marketplace](https://code.claude.com/
 /lanes:setup-mcp                      # desktop only: register the MCP
 ```
 
-Install whichever you need. Update with `/plugin marketplace update lanes`. If you installed the old single `lanes` plugin before it was split, install `lanes-desktop@lanes` instead; the old name still resolves, so existing installs keep updating either way.
+Install whichever you need, and update with `/plugin marketplace update lanes`.
 
 **[`lanes-desktop`](plugins/lanes-desktop)** drives the board from chat:
 
-- **[`lanes-sessions`](plugins/lanes-desktop/skills/lanes-sessions/SKILL.md)** teaches the `lanes_*` tools and the multi-session model: creating issues, starting and inspecting sessions, batch-launching across worktrees, reading terminal output, resolving labels and components.
-- **[`github-lanes-bridge`](plugins/lanes-desktop/skills/github-lanes-bridge/SKILL.md)** and **[`linear-lanes-bridge`](plugins/lanes-desktop/skills/linear-lanes-bridge/SKILL.md)** move work in and out: import a ticket or a whole sprint, decompose it into sub-issues with dependencies, then push PR links and comments back.
-- **`/lanes:setup-mcp`** connects Claude Code and Cursor to the running app and verifies the endpoint is live.
+| Skill | What it covers |
+|---|---|
+| [`lanes-sessions`](plugins/lanes-desktop/skills/lanes-sessions/SKILL.md) | The `lanes_*` tools and the multi-session model: creating issues, starting and inspecting sessions, batch-launching across worktrees, reading terminal output, resolving labels and components. |
+| [`github-lanes-bridge`](plugins/lanes-desktop/skills/github-lanes-bridge/SKILL.md) | Import a GitHub ticket or a whole sprint, decompose it into sub-issues with dependencies, then push PR links and comments back. |
+| [`linear-lanes-bridge`](plugins/lanes-desktop/skills/linear-lanes-bridge/SKILL.md) | The same loop for Linear, including sprint imports. |
+| `/lanes:setup-mcp` | Connects Claude Code and Cursor to the running app, and verifies the endpoint is live. |
 
 **[`lanes-forms`](plugins/lanes-forms/skills/lanes-forms/SKILL.md)** is separate from the desktop app: provision a live [Lanes Forms](https://lanes.sh/forms) endpoint with one POST and no signup, or fill in a form on someone's behalf.
 
-Prefer [skills.sh](https://skills.sh)? `npx skills add lanes-sh/app` installs the SKILL.md files only. Register the MCP yourself with:
+Installed the old single `lanes` plugin before it was split? Install `lanes-desktop@lanes` instead. The old name still resolves, so existing installs keep updating either way.
+
+</details>
+
+<details>
+<summary><strong>Setup without the plugin</strong></summary>
+
+[skills.sh](https://skills.sh) installs the SKILL.md files only:
+
+```
+npx skills add lanes-sh/app
+```
+
+Then register the MCP yourself:
 
 ```
 claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
 ```
 
-then restart Claude Code. Lanes has to be running for the endpoint to answer.
+Restart Claude Code afterwards. Lanes has to be running for the endpoint to answer.
+
+</details>
+
+<details>
+<summary><strong>Building loops</strong></summary>
+
+Once an agent can read session status and the diff that came out of it, you can stop prompting and start looping: start work, check it, advance the board, repeat until the goal is met or a human is needed.
+
+[Building Loops](https://lanes.sh/docs/desktop/loops) is the practical guide, and [Loop Engineering](https://lanes.sh/blog/loop-engineering-with-lanes) is the thinking behind it.
+
+</details>
 
 ## Documentation
 
