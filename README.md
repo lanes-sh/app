@@ -48,15 +48,23 @@ New here? The **[Quickstart](https://lanes.sh/docs/desktop/quick-start)** takes 
 
 ### The board
 
-Drag issues through your workflow. The default is Planning, Implementation, Review and Done, plus Backlog and Misc, and the steps are configurable. Multi-select with Shift+Click and Cmd+Click for bulk moves, right-click menus, sorting by newest, recently updated or alphabetical, collapsible columns, and board tabs scoped per project directory and worktree.
-
-Labels come in 13 colors, and you can filter by label, working directory or workflow step. Dependencies link issues with cycle detection, so a dependent card stays blocked until every prerequisite reaches Done. Attachments render image previews inline, and per-repo configuration (labels, CLI flags, quick commands) lives in `.lanes/` next to your code.
+- **Drag issues through your workflow.** The default is Planning, Implementation, Review and Done, plus Backlog and Misc, and the steps are configurable.
+- **Bulk operations.** Multi-select with Shift+Click and Cmd+Click, right-click menus, sorting by newest, recently updated or alphabetical, and collapsible columns.
+- **Board tabs** scoped per project directory and worktree, so two repos never bleed into each other.
+- **Labels and filters.** 13 label colors, and filtering by label, working directory or workflow step.
+- **Dependencies** with cycle detection, so a dependent card stays blocked until every prerequisite reaches Done.
+- **Attachments** with inline image previews.
+- **Per-repo configuration.** Labels, CLI flags and quick commands live in `.lanes/` next to your code.
 
 ### Sessions
 
-Every issue can run agent sessions in real PTY-backed terminals, and an issue can host **several at once**: slots, names and branch-off siblings, so one card holds the plan-mode session and the two implementation runs it spawned.
-
-Start in plan mode or implement mode, choose the model and reasoning effort per session, resume across app restarts, and drag files onto a terminal to inject their paths. Status is read live from what the CLI writes to disk: busy, awaiting input, stopped, exited, error. Each session reports its token usage (input, output, cache created, cache read) and keeps a browsable history of the conversation. Completion sounds tell you when a session wants you, and Keep Awake stops a long run dying to a sleeping laptop.
+- **Real terminals.** Every issue runs its agent sessions in PTY-backed terminals, and one issue can host **several at once**: slots, names and branch-off siblings, so a single card holds the plan-mode session and the two implementation runs it spawned.
+- **Plan mode or implement mode**, with the model and reasoning effort chosen per session.
+- **Resume across restarts.** Close the app, come back, pick the session up where it left off.
+- **Live status** read from what the CLI writes to disk: busy, awaiting input, stopped, exited, error.
+- **Token usage per session**, split into input, output, cache created and cache read, next to a browsable history of the conversation.
+- **Drag files onto a terminal** to inject their paths.
+- **Completion sounds** when a session wants you, and **Keep Awake** so a long run does not die to a sleeping laptop.
 
 ### Models and harnesses
 
@@ -67,6 +75,18 @@ Start in plan mode or implement mode, choose the model and reasoning effort per 
 - **[Local LLMs](https://lanes.sh/docs/desktop/local-llms)** drives Ollama end to end: install, start, stop, pull and remove models, browse the library, and see which models actually fit your RAM before you spend the download. On pull it bakes a context window sized to your machine, because a real session sends roughly 38,000 tokens of harness and tool definitions before you type anything. Research preview.
 
 All three live under **Settings > Agentic Coding**.
+
+### Your apps, memory and skills
+
+Give every agent your apps, memory and skills. [Lanes Link](https://lanes.sh/link) is one endpoint you run: GitHub, Linear, Gmail, memory and skills, behind one set of permissions.
+
+- **Connect once, use everywhere.** Around twenty providers including GitHub, Linear, Gmail, Drive, Notion and Slack, plus any MCP server, any REST API with an OpenAPI spec, any IMAP mailbox, any CalDAV server.
+- **Memory and skills as plain Markdown**, so what an agent knows about you follows it between sessions and between tools.
+- **Permissions enforced at dispatch**, not asked of the model. `gmail.search` allowed with `gmail.send` denied holds regardless of what the prompt says, and every call lands in an append-only audit log.
+- **Profiles** keep work and personal credentials, memory and policy apart.
+- **Credentials never reach the agent.** Requests go from your machine straight to the provider.
+
+Run it yourself with `bun install -g @lanes-sh/link`. Free and open source at [github.com/lanes-sh/link](https://github.com/lanes-sh/link).
 
 ### The workbench around them
 
@@ -81,11 +101,18 @@ All three live under **Settings > Agentic Coding**.
 
 ### Your team
 
-Workspaces are local or remote. A remote workspace syncs issues, chat and presence in about two seconds, with member management, per-issue assignees, presence avatars and in-app chat. Reconnects back off gracefully, and a banner tells you when sync is degraded rather than pretending everything is fine.
+- **Local or remote workspaces.** A remote workspace syncs issues, chat and presence in about two seconds.
+- **Members and assignees.** Manage who is in the workspace, and put a name on each issue.
+- **Presence avatars**, so you can see who is looking at what.
+- **In-app chat**, scoped to the workspace.
+- **Honest sync state.** Reconnects back off gracefully, and a banner tells you when sync is degraded rather than pretending everything is fine.
 
 ### Integrations
 
-Connect **GitHub** and **Linear** over OAuth. Browse repos, teams and issues, multi-select import them into Lanes, run them locally, then push the result back as a comment. Agents can drive the same integrations over MCP.
+- **GitHub and Linear over OAuth.** Browse repos, teams and issues from inside Lanes.
+- **Multi-select import** pulls tickets onto the board, so a whole sprint can run locally.
+- **Push the result back** as a comment once the work is done.
+- **Agents can drive the same integrations** over MCP, without you leaving chat.
 
 ## For agents
 
@@ -201,6 +228,28 @@ claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope u
 
 then restart Claude Code. Lanes has to be running for the endpoint to answer.
 
+## Documentation
+
+- **[Quickstart](https://lanes.sh/docs/desktop/quick-start)** goes from install to a running agent session.
+- **[Desktop docs](https://lanes.sh/docs/desktop)** cover everything above in detail, including [the issue board](https://lanes.sh/docs/desktop/issue-board), [sessions](https://lanes.sh/docs/desktop/sessions), [worktrees](https://lanes.sh/docs/desktop/worktrees), [git integration](https://lanes.sh/docs/desktop/git-integration), [keyboard shortcuts](https://lanes.sh/docs/desktop/keyboard-shortcuts) and [settings](https://lanes.sh/docs/desktop/settings).
+- **[All Lanes docs](https://lanes.sh/docs)**, where [/docs/mcp](https://lanes.sh/docs/mcp) compares the three MCP servers we ship.
+
+## Part of Lanes
+
+Lanes is a family of products for building with agents. [Overview](https://lanes.sh/overview).
+
+- **[Lanes Desktop](https://lanes.sh/desktop)** is this repo: mission control for your agent sessions, on your Mac.
+- **[Lanes Link](https://lanes.sh/link)** is one MCP endpoint you run yourself, sitting between your agents and your accounts, memory, skills and secrets. Deny by default, enforced at dispatch, with an append-only audit log. See [Your apps, memory and skills](#your-apps-memory-and-skills) above. Free and open source: [github.com/lanes-sh/link](https://github.com/lanes-sh/link).
+- **[Lanes Forms](https://lanes.sh/forms)** gives you a live form endpoint from a single POST, with no signup. Submissions are captured from the first second, forwarded by email or webhook, and the form can be claimed into a dashboard later.
+- **[Lanes Compute](https://lanes.sh/compute)** is GPUs on demand, from a single A100 to multi-node H100 clusters over InfiniBand, billed per second. In limited early access, so request access on the page.
+- **[Managed Services](https://lanes.sh/services)** is our team building and operating it for you, with humans accountable for the result.
+
+## Under the hood
+
+Tauri 2, React 19, Rust and SQLite. Axum serves the MCP, `portable-pty` runs the terminals, xterm.js renders them, Monaco edits your files. Fast startup, low memory, native performance.
+
+Local-first by default: a local workspace keeps every issue, session and setting in SQLite on your machine, and your code never goes anywhere. Remote workspaces are opt-in and sync issues, chat and presence through our backend so a team can share a board. Crash reporting is opt-in too.
+
 ## Keyboard shortcuts
 
 | Shortcut | Action |
@@ -219,28 +268,6 @@ then restart Claude Code. Lanes has to be running for the endpoint to answer.
 | Cmd/Ctrl+Click | Toggle individual issue selection |
 | Cmd+Enter | Confirm the open dialog |
 | Escape | Clear selection or close dialog |
-
-## Documentation
-
-- **[Quickstart](https://lanes.sh/docs/desktop/quick-start)** goes from install to a running agent session.
-- **[Desktop docs](https://lanes.sh/docs/desktop)** cover everything above in detail, including [the issue board](https://lanes.sh/docs/desktop/issue-board), [sessions](https://lanes.sh/docs/desktop/sessions), [worktrees](https://lanes.sh/docs/desktop/worktrees), [git integration](https://lanes.sh/docs/desktop/git-integration), [keyboard shortcuts](https://lanes.sh/docs/desktop/keyboard-shortcuts) and [settings](https://lanes.sh/docs/desktop/settings).
-- **[All Lanes docs](https://lanes.sh/docs)**, where [/docs/mcp](https://lanes.sh/docs/mcp) compares the three MCP servers we ship.
-
-## Part of Lanes
-
-Lanes is a family of products for building with agents. [Overview](https://lanes.sh/overview).
-
-- **[Lanes Desktop](https://lanes.sh/desktop)** is this repo: mission control for your agent sessions, on your Mac.
-- **[Lanes Link](https://lanes.sh/link)** is one MCP endpoint you run yourself, sitting between your agents and your accounts, memory, skills and secrets. Connect Gmail, Drive, Notion, Linear, GitHub, Slack and around twenty others once, keep work and personal profiles apart, and decide per capability what each agent may do. Deny by default, enforced at dispatch rather than asked of the model, with an append-only audit log. Free and open source: [github.com/lanes-sh/link](https://github.com/lanes-sh/link).
-- **[Lanes Forms](https://lanes.sh/forms)** gives you a live form endpoint from a single POST, with no signup. Submissions are captured from the first second, forwarded by email or webhook, and the form can be claimed into a dashboard later.
-- **[Lanes Compute](https://lanes.sh/compute)** is GPUs on demand, from a single A100 to multi-node H100 clusters over InfiniBand, billed per second. In limited early access, so request access on the page.
-- **[Managed Services](https://lanes.sh/services)** is our team building and operating it for you, with humans accountable for the result.
-
-## Under the hood
-
-Tauri 2, React 19, Rust and SQLite. Axum serves the MCP, `portable-pty` runs the terminals, xterm.js renders them, Monaco edits your files. Fast startup, low memory, native performance.
-
-Local-first by default: a local workspace keeps every issue, session and setting in SQLite on your machine, and your code never goes anywhere. Remote workspaces are opt-in and sync issues, chat and presence through our backend so a team can share a board. Crash reporting is opt-in too.
 
 ## License
 
