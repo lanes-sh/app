@@ -10,7 +10,7 @@
 <br>
 
 <p align="center">
-  <img src="https://lanes.sh/assets/demo.gif" alt="Lanes: agent sessions, worktrees and diffs on one board" width="800" />
+  <img src="https://lanes.sh/assets/demo.gif?v=3" alt="Lanes: agent sessions, worktrees and diffs on one board" width="768" />
 </p>
 
 <br>
