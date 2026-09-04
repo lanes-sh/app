@@ -1,6 +1,6 @@
 ---
 name: lanes-sessions
-description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/todo/in-progress/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name.
+description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/planning/implementation/review/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name.
 ---
 
 # Lanes sessions
@@ -16,7 +16,7 @@ Use this skill whenever the user wants to look at, create, or run work on the La
 Before doing anything, sanity-check that the Lanes MCP is reachable:
 
 - Call `lanes_list_components`. If it returns an array (possibly empty), you're good.
-- If the tool isn't available at all, the MCP isn't installed. Tell the user to run the `/lanes:setup-mcp` slash command (shipped alongside this skill) or, if they have raw skills only, run:
+- If the tool isn't available at all, the MCP isn't installed. Tell the user to run the `/lanes-desktop:setup-mcp` slash command (shipped alongside this skill) or, if they have raw skills only, run:
   ```
   claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
   ```
@@ -26,7 +26,7 @@ Before doing anything, sanity-check that the Lanes MCP is reachable:
 
 | Group | Tool | Purpose |
 |---|---|---|
-| Issues | `lanes_list_issues` | Filter by `step` / `tags` (any-match) / `componentId` / `search`. |
+| Issues | `lanes_list_issues` | Filter by `step` / `tags` (any-match) / `componentId` / `search`. **Defaults are scoped**: at most 20, active project only, `done` excluded. Pass `limit` (no upper bound), `allProjects: true`, or `includeDone: true` to widen. Returns an envelope `{ issues, appliedFilters, truncated, totalAvailable }`, so check `truncated` before concluding a search found nothing. |
 | | `lanes_get_issue` | Full details by `id`. Does **not** include sessions. |
 | | `lanes_create_issue` | Required: `title`. |
 | | `lanes_update_issue` | Patch by `id`; pass `null` to clear nullable fields. |
@@ -80,7 +80,7 @@ Never re-issue `lanes_start_session` to check on a previous one. That is how you
 ## Critical gotchas
 
 - **Labels and components are UUIDs, not names.** Always call `lanes_list_labels` / `lanes_list_components` first and resolve names → UUIDs locally. Passing a plain name like `"bug"` will not match anything.
-- **`step` is exactly four values:** `backlog`, `todo`, `in-progress`, `done`. Any other string is rejected. Use `lanes_move_issue` if you only want to change the step.
+- **`step` is one of six values:** `backlog`, `planning`, `implementation`, `review`, `done`, `misc`. The tool declares them as an enum, so anything else is rejected before it reaches the board. Use `lanes_move_issue` if you only want to change the step.
 - **Worktree auto-create requires two fields, set in advance.** To make `lanes_start_session` create a fresh git worktree, the issue must already have `worktreeStrategy: "create"` AND `worktreeName: "<branch>"`. Set them via `lanes_create_issue` or `lanes_update_issue` *before* calling `start_session`.
 - **`prompt` has three modes:**
   - Omitted → uses the issue's description (falling back to title).
@@ -128,7 +128,7 @@ Step 3 already tells you the slot it started; there is no separate confirmation 
      }
 ```
 
-Then ask the user to review the resulting plans; promote each issue to `todo` or `in-progress` once plans are approved.
+Then ask the user to review the resulting plans; promote each issue to `implementation` once plans are approved.
 
 ### Investigate a stuck session
 
@@ -164,7 +164,7 @@ Only works for `cli: "claude"` sessions that recorded a `cliSessionId`. Codex/sh
 ## Anti-patterns
 
 - ❌ Calling `lanes_create_issue` with `tags: ["bug"]`. Tags must be label UUIDs from `lanes_list_labels`.
-- ❌ Setting `step: "in_progress"` (underscore). It's `in-progress` (hyphen).
+- ❌ Setting `step: "todo"` or `"in-progress"`. Neither exists. The board's steps are `backlog`, `planning`, `implementation`, `review`, `done` and `misc`.
 - ❌ Calling `lanes_start_session` with `worktreeStrategy: "create"` in the same call — the field lives on the *issue*, not the session call. Set it via `create_issue` / `update_issue` first.
 - ❌ Polling `lanes_read_terminal` in a tight loop. Read once, summarise, ask the user before re-polling.
 - ❌ Confusing `id` (issue endpoints) with `issueId` (session endpoints). They refer to the same thing but live under different keys.

@@ -14,7 +14,7 @@ The API base URL is always `https://api.lanes.sh` — use this production host f
 
 ## Fastest path: the MCP server
 
-The `lanes` MCP server wraps every call below and is the easiest way to work. If it isn't connected yet, run **`/setup-mcp`** to register it — it points at the hosted server (`https://api.lanes.sh/mcp`), authenticated with a workspace key. Its five tools are `create_form`, `get_form`, `update_form`, `generate_form_snippet`, and `submit_form`. With a workspace key configured, `create_form` provisions a form **born claimed** into that workspace, and the management tools (`get_form` / `update_form` / `generate_form_snippet`) require it. Without the MCP, call the API directly as shown below.
+The `lanes` MCP server wraps every call below and is the easiest way to work. If it isn't connected yet, run **`/lanes-forms:setup-mcp`** to register it — it points at the hosted server (`https://api.lanes.sh/mcp`), authenticated with a workspace key. Its five tools are `create_form`, `get_form`, `update_form`, `generate_form_snippet`, and `submit_form`. With a workspace key configured, `create_form` provisions a form **born claimed** into that workspace, and the management tools (`get_form` / `update_form` / `generate_form_snippet`) require it. Without the MCP, call the API directly as shown below.
 
 ## Provision a form
 
