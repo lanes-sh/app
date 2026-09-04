@@ -90,7 +90,6 @@ A family of products for building with agents. [Overview](https://lanes.sh/).
 - **[Lanes Link](https://lanes.sh/link)** is one MCP endpoint you run yourself, between your agents and your accounts, memory, skills and secrets. Open source.
 - **[Lanes Forms](https://lanes.sh/forms)** gives you a live form endpoint from a single POST, with no signup.
 - **[Lanes Compute](https://lanes.sh/compute)** is GPUs on demand, a single A100 through multi-node H100 clusters, billed per second. Limited early access.
-- **[Managed Services](https://lanes.sh/services)** is our team building and operating it for you.
 
 ## License
 
