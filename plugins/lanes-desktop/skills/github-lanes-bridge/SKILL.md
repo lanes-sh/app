@@ -23,7 +23,7 @@ When a Lanes issue hosts more than one CLI session, follow the multi-session dis
 
 ## Prerequisites
 
-- **Lanes MCP must be connected** — verify with `lanes_list_components`. If missing, run `/lanes:setup-mcp`.
+- **Lanes MCP must be connected** — verify with `lanes_list_components`. If missing, run `/lanes-desktop:setup-mcp`.
 - **GitHub must be connected inside Lanes** — verify with `lanes_github_list_repos`. If it returns a "not connected" error, ask the user to connect GitHub from **Lanes → Settings → GitHub** (OAuth flow). The token is read from `integrations.json` on every call. GitHub tokens don't expire, so no refresh logic to worry about.
 
 There is no standalone GitHub MCP required. The same Lanes MCP that exposes `lanes_list_issues` also exposes `lanes_github_list_repos`, `lanes_github_get_issue`, etc. — they're additional tools on the same server.
@@ -61,7 +61,7 @@ Returned `ExternalIssue` shape:
 | `externalKey` (e.g. `#42`) | Title prefix + description marker | Used as the dedup key. |
 | `title` | `title` | Pass through. |
 | `body` (markdown) | `description` | Prepend a marker line: `GitHub: owner/name#42 — <externalUrl>` so round-tripping is trivial. |
-| `state` (`open` / `closed`) | `step` | `open` → `backlog`/`todo` (your call); `closed` → `done` if explicitly importing closed issues. |
+| `state` (`open` / `closed`) | `step` | `open` → `backlog`/`planning` (your call); `closed` → `done` if explicitly importing closed issues. |
 | upstream `externalId` (issue number) | `externalId` on `lanes_create_issue` | Pass through. |
 | upstream `externalUrl` | `externalUrl` on `lanes_create_issue` | Pass through. |
 | upstream `externalKey` | `externalKey` on `lanes_create_issue` | Pass through. |

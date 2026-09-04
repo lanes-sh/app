@@ -23,7 +23,7 @@ When a Lanes issue hosts more than one CLI session, follow the multi-session dis
 
 ## Prerequisites
 
-- **Lanes MCP must be connected** — verify with `lanes_list_components`. If missing, run `/lanes:setup-mcp`.
+- **Lanes MCP must be connected** — verify with `lanes_list_components`. If missing, run `/lanes-desktop:setup-mcp`.
 - **Linear must be connected inside Lanes** — verify with `lanes_linear_list_teams`. If it returns a "not connected" error, ask the user to connect Linear from **Lanes → Settings → Linear** (OAuth flow). All `lanes_linear_*` tools read the user's token from `integrations.json` on every call, including a transparent refresh of expired access tokens.
 
 There is no standalone Linear MCP required. The same Lanes MCP that exposes `lanes_list_issues` also exposes `lanes_linear_list_teams`, `lanes_linear_get_issue`, etc. — they're additional tools on the same server.
@@ -61,7 +61,7 @@ Returned `ExternalIssue` shape:
 | `externalKey` (e.g. `ENG-123`) | Title prefix + description marker | Used as the dedup key. |
 | `title` | `title` | Pass through. |
 | `description` | `description` | Prepend a marker line: `Linear: ENG-123 — <externalUrl>` so round-tripping is trivial. |
-| `state` (raw name) | `step` | Map to `backlog`/`todo`/`in-progress`/`done` based on best fit. `lanes_linear_*` returns the human-readable state name, not the type — map conservatively (when unsure, use `backlog`). |
+| `state` (raw name) | `step` | Map to `backlog`/`planning`/`implementation`/`review`/`done` based on best fit. `lanes_linear_*` returns the human-readable state name, not the type — map conservatively (when unsure, use `backlog`). |
 | upstream `externalId` | `externalId` on `lanes_create_issue` | Pass the Linear UUID through so `ExternalLinkBadge` can refresh. |
 | upstream `externalUrl` | `externalUrl` on `lanes_create_issue` | Pass through. |
 | upstream `externalKey` | `externalKey` on `lanes_create_issue` | Pass through. |

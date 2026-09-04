@@ -21,7 +21,7 @@ Skip if Claude Code wasn't detected.
    - `lanes-local` — the previous name. Still fully supported; leave it be.
    - `lanes` whose URL is `http://localhost:5353/sse` — the original name. Still supported; leave it be.
 
-   Any of the three means the local server is already registered, so skip to step 3 and don't add a duplicate. Never rename an existing entry here — Lanes Settings → Local MCP has a button for that, and it carries the user's tool permissions across. (A `lanes` entry pointing somewhere *else* is the separate remote Lanes Forms server; leave it alone.)
+   Any of the three means the local server is already registered, so skip to step 3 and don't add a duplicate. Never rename an existing entry here — Settings → Integrations → Lanes MCP has a button for that, and it carries the user's tool permissions across. (A `lanes` entry pointing somewhere *else* is the separate remote Lanes Forms server; leave it alone.)
 2. **If none are present**, register it:
    ```
    claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
@@ -77,7 +77,7 @@ One short paragraph covering: per-client registration status (Claude Code, Curso
 
 Notes:
 - New installs register the local server as `lanes-desktop`. It previously shipped as `lanes-local`, and before that as bare `lanes`; both keep working indefinitely.
-- **This command never renames an existing entry, in any client.** A server's config name is the prefix on its tool names, so renaming it resets the user's approvals. That trade-off is theirs to make: Lanes Settings → Local MCP has a per-client button that does the rename *and* carries the Claude Code tool grants across (Codex's are nested under the server entry and move with it anyway). Point the user there if they ask. Cursor has no such button — there, renaming means removing and re-adding by hand.
+- **This command never renames an existing entry, in any client.** A server's config name is the prefix on its tool names, so renaming it resets the user's approvals. That trade-off is theirs to make: Settings → Integrations → Lanes MCP has a per-client button that does the rename *and* carries the Claude Code tool grants across (Codex's are nested under the server entry and move with it anyway). Point the user there if they ask. Cursor has no such button — there, renaming means removing and re-adding by hand.
 - Don't overwrite an existing MCP entry without asking. The user may have customised the URL, or may be deliberately referring to the server by an older name.
 - The SSE endpoint is local-only (no auth, never leaves the machine). Don't expose `localhost:5353` over the network.
-- If the user is on a non-default port (set in Lanes Settings → Local MCP), they should pass that URL instead, in both clients.
+- If the user is on a non-default port (set in Settings → Integrations → Lanes MCP), they should pass that URL instead, in both clients.
