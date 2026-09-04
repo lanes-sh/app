@@ -1,6 +1,6 @@
 {
   "name": "lanes",
-  "description": "Skills and slash commands for using Lanes — the AI agent issue board and Lanes Forms — with Claude Code",
+  "description": "Skills and slash commands for using Lanes with Claude Code: the agent issue board, Lanes Link, and Lanes Forms",
   "owner": {
     "name": "Lanes",
     "url": "https://lanes.sh"
@@ -20,6 +20,11 @@
       "name": "lanes-forms",
       "source": "./plugins/lanes-forms",
       "description": "Provision Lanes Forms endpoints and fill them in on a user's behalf"
+    },
+    {
+      "name": "lanes-link",
+      "source": "./plugins/lanes-link",
+      "description": "Set up Lanes Link, the self-hostable MCP endpoint for your own accounts, memory, tasks and secrets"
     }
   ]
 }

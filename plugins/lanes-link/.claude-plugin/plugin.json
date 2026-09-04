@@ -1,0 +1,8 @@
+{
+  "name": "lanes-link",
+  "version": "0.1.0",
+  "description": "Lanes Link: set up the self-hostable MCP endpoint that gives your agents your own accounts, memory, tasks and secrets",
+  "author": { "name": "Lanes", "url": "https://lanes.sh" },
+  "homepage": "https://lanes.sh/link",
+  "keywords": ["lanes", "lanes-link", "mcp", "gateway", "oauth", "memory", "self-hosted"]
+}

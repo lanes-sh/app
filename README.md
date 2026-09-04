@@ -70,6 +70,29 @@ Lanes ships a built-in [MCP](https://modelcontextprotocol.io) server so Claude C
 
 Once an agent can read session status and the diff that came out of it, you can stop prompting and start looping. [Building loops](https://lanes.sh/docs/desktop/loops) is the guide; [Loop engineering](https://lanes.sh/blog/loop-engineering-with-lanes) is the thinking behind it.
 
+### Claude Code plugins
+
+This repository is also a Claude Code plugin marketplace. Add it once, then install what you use:
+
+```
+/plugin marketplace add lanes-sh/app
+/plugin install lanes-desktop@lanes
+/plugin install lanes-link@lanes
+/plugin install lanes-forms@lanes
+```
+
+| Plugin | Skill | What it is for |
+|---|---|---|
+| `lanes-desktop` | `install-lanes-desktop` | Install the Mac app, add a project, connect the local MCP. |
+| | `lanes-sessions` | Drive the board: issues, sessions, worktrees, terminals. |
+| | `github-lanes-bridge` | Import GitHub issues, run them locally, post results back. |
+| | `linear-lanes-bridge` | The same loop for Linear, including sprint imports. |
+| | `/lanes:setup-mcp` | Slash command: register the local MCP with Claude Code and Cursor. |
+| `lanes-link` | `setup-lanes-link` | Stand up the Lanes Link endpoint and register it with every agent. |
+| `lanes-forms` | `lanes-forms` | Provision a form backend, or fill one in on someone's behalf. |
+
+Update them with `/plugin marketplace update lanes`. Without the plugin system, `npx skills add lanes-sh/app` installs the SKILL.md files alone.
+
 ## Under the hood
 
 Tauri 2, React 19, Rust and SQLite. Axum serves the MCP, `portable-pty` runs the terminals, xterm.js renders them, Monaco edits your files.

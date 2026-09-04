@@ -1,7 +1,7 @@
 {
   "name": "lanes-desktop",
-  "version": "0.5.0",
-  "description": "Lanes desktop: skills and slash commands for the Lanes issue board, sessions, and local MCP",
+  "version": "0.6.0",
+  "description": "Lanes desktop: skills and slash commands for installing Lanes, and for the issue board, sessions, and local MCP",
   "author": {
     "name": "Lanes",
     "url": "https://lanes.sh"
