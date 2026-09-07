@@ -1,6 +1,6 @@
 ---
 name: lanes-sessions
-description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/planning/implementation/review/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name. Also applies when Claude Code is itself running inside a Lanes session (`LANES_TERMINAL=1`, `LANES_SESSION=<issue id>`) — that is when to link a worktree you created yourself, so the issue's Changes tab points at your work instead of at an empty diff.
+description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/planning/implementation/review/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name. Also applies when Claude Code is itself running inside a Lanes session (`LANES_TERMINAL=1`, `LANES_SESSION=<issue id>`) — every worktree you create must be linked to the issue with lanes_update_issue, or the issue's Changes tab points at an empty diff instead of at your work.
 ---
 
 # Lanes sessions
@@ -34,36 +34,30 @@ Everything else here assumes you are driving the board from outside. When Lanes 
 
 Read them with `echo $LANES_SESSION`. If `LANES_TERMINAL` is unset you are an ordinary Claude Code session with no issue to report against, so skip to the tool inventory.
 
-### Link a worktree you created yourself
+### Link every worktree you create
 
-Lanes shows an issue's diff by following the branch reference on the issue. Create a git worktree it does not know about and that reference still points at the main checkout, so whoever reviews your work sees an empty diff.
-
-Check before you act:
-
-1. `lanes_get_issue { id: $LANES_SESSION }`, and read `worktreeStrategy`.
-2. `"create"` or `"select"` → Lanes made the worktree and started you inside it. Nothing to do.
-3. `"none"`, or the field is absent → you are in the main checkout. If you go on to create your own worktree, link it in the same breath:
-   ```
-   lanes_update_issue { id: $LANES_SESSION, branch: "<your-new-branch>" }
-   ```
+**Every `git worktree add` you run is followed by
+`lanes_update_issue { id: $LANES_SESSION, branch: "<branch>" }`.** Not conditionally, not once you are finished. A worktree Lanes did not create is a worktree the issue does not know about, and until you link it the Changes tab and `lanes_get_issue_changes` both show an empty diff, so your work reads as never having happened.
 
 Setting `branch` is the whole job. Lanes finds the worktree that branch is checked out in and fills `worktreeStrategy`, `worktreePath` and `worktreeName` from it, so do not set those three yourself.
 
+Then check it took:
+
+```
+lanes_get_issue { id: $LANES_SESSION }
+```
+
+`worktreeStrategy` should be `"select"` and `worktreePath` should be the folder you are working in. If `worktreeStrategy` came back `"none"`, Lanes could not find a worktree for that branch. Call `lanes_list_worktrees`, find your folder in the list, and pass its `path`:
+
+```
+lanes_update_issue { id: $LANES_SESSION, worktreePath: "<path from the list>" }
+```
+
+If your folder is not in that list either, you are in a repository Lanes has no working folder linked for, and there is nothing to link the issue to. Say so rather than retrying.
+
+When Lanes started you inside a worktree it made, `lanes_get_issue` already reports `"create"` or `"select"` and there is nothing to do. Checking costs one call and is worth it before you assume.
+
 Linking is not the same as asking for a worktree. `worktreeStrategy: "create"` only affects the *next* session on the issue and never relocates a running agent, so setting it mid-session will not move you.
-
-### Give the session the worktree's name
-
-A session and the worktree it works in should read as one thing. By default they do not: the board shows the branch as `29-lazy-toad` while the session beside it is `Session 2`, or whatever title Claude Code derived from the first thing you said.
-
-So whenever you know which worktree a session is in, name the session to match:
-
-```
-lanes_rename_session { issueId: $LANES_SESSION, name: "<worktree folder name>" }
-```
-
-Use the worktree folder name under `.worktrees/`, which is also the branch short-name. Do it in the same step as linking the worktree above, and do it for a worktree Lanes created too, where there is nothing to link but the name is still worth setting.
-
-This works for every CLI, Codex included: the name is a Lanes field, not something read out of the CLI. It also outranks the name Claude Code derives from its own status file, which Lanes only borrows while a session has no name of its own. So setting it once sticks, and `null` or `""` gives the derived default back.
 
 ## Tool inventory
 
@@ -79,7 +73,6 @@ This works for every CLI, Codex included: the name is a Lanes field, not somethi
 | | `lanes_stop_session` | Stop a session for `issueId`. Optional `session` (UUID/slot/name) to disambiguate when >1. |
 | | `lanes_resume_session` | Re-attach Claude to a stopped session. **Claude-only.** Optional `session`. |
 | | `lanes_delete_session` | Permanently delete a session (stops it first if running). Optional `session`. |
-| | `lanes_rename_session` | Set the session's display name. Required `issueId` + `name` (`null` or `""` clears it). Optional `session`. |
 | | `lanes_get_session_status` | With `issueId`: bare array of every session for that issue (status under both `status` and `runtimeStatus`). Without: envelope `{ sessions, appliedFilters, truncated, totalAvailable }` capped at 20. |
 | History | `lanes_get_issue_changes` | `git diff` for the issue's cwd, by `id`. |
 | | `lanes_get_issue_history` | Paginated Claude conversation history, by `id`. Use `cliSessionId` to pick when an issue has multiple Claude sessions. |
@@ -87,6 +80,7 @@ This works for every CLI, Codex included: the name is a Lanes field, not somethi
 | | `lanes_get_session_stats` | Tokens, model breakdown, tool calls, duration, by `id`. Use `cliSessionId` to pick when an issue has multiple Claude sessions. |
 | Metadata | `lanes_list_labels` | UUIDs, names, colors. Call before assigning `tags`. |
 | | `lanes_list_components` | UUIDs, names, project IDs. Call before setting `componentId`. |
+| | `lanes_list_worktrees` | Every worktree Lanes can see: `name`, `path`, `branch`, and the `projectPath` it came from. Optional `projectPath` narrows it to one repository. Use it to find the path to link, or to check whether a branch already has a worktree. |
 | | `lanes_delete_worktree` | Remove a git worktree on disk by `projectPath` + `name`. |
 
 Note the parameter-name inconsistency: issue endpoints take `id`, session endpoints take `issueId`. Don't mix them. Session-targeting tools additionally accept an optional `session` ref (UUID, slot, or name — case-insensitive).
@@ -221,5 +215,4 @@ Only works for `cli: "claude"` sessions that recorded a `cliSessionId`. Codex/sh
 - ❌ Treating `"No sessions exist for issue N yet"` as a cue to start a session. Inside the launch window it is the expected answer for a session that is starting normally.
 - ❌ Using `lanes_get_issue` to check whether a session started. It does not return sessions — `lanes_get_session_status` does.
 - ❌ Looking for only one of `status` / `runtimeStatus` on a session entry and concluding the session is broken when it's absent. Both keys are present and carry the same value.
-- ❌ Creating a git worktree while running inside a Lanes session and never linking it. The issue keeps pointing at the main checkout, so `lanes_get_issue_changes` and the board's Changes tab both show an empty diff and your work looks like it never happened. Call `lanes_update_issue { id: $LANES_SESSION, branch: "<branch>" }` right after `git worktree add`.
-- ❌ Leaving a session called `Session 2` next to a branch badge that says something else. Name it after the worktree with `lanes_rename_session` so the board reads as one thing. Renaming is not restricted to Claude sessions.
+- ❌ Creating a git worktree while running inside a Lanes session and never linking it. The issue keeps pointing at the main checkout, so `lanes_get_issue_changes` and the board's Changes tab both show an empty diff and your work looks like it never happened. Call `lanes_update_issue { id: $LANES_SESSION, branch: "<branch>" }` right after `git worktree add`, then re-read the issue to confirm `worktreeStrategy` is `"select"`.
