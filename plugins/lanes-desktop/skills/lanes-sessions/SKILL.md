@@ -51,6 +51,20 @@ Setting `branch` is the whole job. Lanes finds the worktree that branch is check
 
 Linking is not the same as asking for a worktree. `worktreeStrategy: "create"` only affects the *next* session on the issue and never relocates a running agent, so setting it mid-session will not move you.
 
+### Give the session the worktree's name
+
+A session and the worktree it works in should read as one thing. By default they do not: the board shows the branch as `29-lazy-toad` while the session beside it is `Session 2`, or whatever title Claude Code derived from the first thing you said.
+
+So whenever you know which worktree a session is in, name the session to match:
+
+```
+lanes_rename_session { issueId: $LANES_SESSION, name: "<worktree folder name>" }
+```
+
+Use the worktree folder name under `.worktrees/`, which is also the branch short-name. Do it in the same step as linking the worktree above, and do it for a worktree Lanes created too, where there is nothing to link but the name is still worth setting.
+
+This works for every CLI, Codex included: the name is a Lanes field, not something read out of the CLI. It also outranks the name Claude Code derives from its own status file, which Lanes only borrows while a session has no name of its own. So setting it once sticks, and `null` or `""` gives the derived default back.
+
 ## Tool inventory
 
 | Group | Tool | Purpose |
@@ -65,6 +79,7 @@ Linking is not the same as asking for a worktree. `worktreeStrategy: "create"` o
 | | `lanes_stop_session` | Stop a session for `issueId`. Optional `session` (UUID/slot/name) to disambiguate when >1. |
 | | `lanes_resume_session` | Re-attach Claude to a stopped session. **Claude-only.** Optional `session`. |
 | | `lanes_delete_session` | Permanently delete a session (stops it first if running). Optional `session`. |
+| | `lanes_rename_session` | Set the session's display name. Required `issueId` + `name` (`null` or `""` clears it). Optional `session`. |
 | | `lanes_get_session_status` | With `issueId`: bare array of every session for that issue (status under both `status` and `runtimeStatus`). Without: envelope `{ sessions, appliedFilters, truncated, totalAvailable }` capped at 20. |
 | History | `lanes_get_issue_changes` | `git diff` for the issue's cwd, by `id`. |
 | | `lanes_get_issue_history` | Paginated Claude conversation history, by `id`. Use `cliSessionId` to pick when an issue has multiple Claude sessions. |
@@ -207,3 +222,4 @@ Only works for `cli: "claude"` sessions that recorded a `cliSessionId`. Codex/sh
 - ❌ Using `lanes_get_issue` to check whether a session started. It does not return sessions — `lanes_get_session_status` does.
 - ❌ Looking for only one of `status` / `runtimeStatus` on a session entry and concluding the session is broken when it's absent. Both keys are present and carry the same value.
 - ❌ Creating a git worktree while running inside a Lanes session and never linking it. The issue keeps pointing at the main checkout, so `lanes_get_issue_changes` and the board's Changes tab both show an empty diff and your work looks like it never happened. Call `lanes_update_issue { id: $LANES_SESSION, branch: "<branch>" }` right after `git worktree add`.
+- ❌ Leaving a session called `Session 2` next to a branch badge that says something else. Name it after the worktree with `lanes_rename_session` so the board reads as one thing. Renaming is not restricted to Claude sessions.
