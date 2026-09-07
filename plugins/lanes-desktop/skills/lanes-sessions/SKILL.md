@@ -1,6 +1,6 @@
 ---
 name: lanes-sessions
-description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/planning/implementation/review/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name.
+description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/planning/implementation/review/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name. Also applies when Claude Code is itself running inside a Lanes session (`LANES_TERMINAL=1`, `LANES_SESSION=<issue id>`) — that is when to link a worktree you created yourself, so the issue's Changes tab points at your work instead of at an empty diff.
 ---
 
 # Lanes sessions
@@ -21,6 +21,35 @@ Before doing anything, sanity-check that the Lanes MCP is reachable:
   claude mcp add --transport sse lanes-desktop http://localhost:5353/sse --scope user
   ```
   Then restart Claude Code so the new MCP loads. Lanes itself must also be running (the desktop app must be open).
+
+## Working inside a Lanes session
+
+Everything else here assumes you are driving the board from outside. When Lanes launched *you*, three environment variables say so:
+
+| Variable | Meaning |
+|---|---|
+| `LANES_TERMINAL` | `1` when Lanes spawned this shell. Unset means this section does not apply. |
+| `LANES_SESSION` | The **issue ID** you are working on. This is what to pass as `id` / `issueId`. |
+| `LANES_SESSION_UUID` | This session's Lanes ref, for the `session` param. |
+
+Read them with `echo $LANES_SESSION`. If `LANES_TERMINAL` is unset you are an ordinary Claude Code session with no issue to report against, so skip to the tool inventory.
+
+### Link a worktree you created yourself
+
+Lanes shows an issue's diff by following the branch reference on the issue. Create a git worktree it does not know about and that reference still points at the main checkout, so whoever reviews your work sees an empty diff.
+
+Check before you act:
+
+1. `lanes_get_issue { id: $LANES_SESSION }`, and read `worktreeStrategy`.
+2. `"create"` or `"select"` → Lanes made the worktree and started you inside it. Nothing to do.
+3. `"none"`, or the field is absent → you are in the main checkout. If you go on to create your own worktree, link it in the same breath:
+   ```
+   lanes_update_issue { id: $LANES_SESSION, branch: "<your-new-branch>" }
+   ```
+
+Setting `branch` is the whole job. Lanes finds the worktree that branch is checked out in and fills `worktreeStrategy`, `worktreePath` and `worktreeName` from it, so do not set those three yourself.
+
+Linking is not the same as asking for a worktree. `worktreeStrategy: "create"` only affects the *next* session on the issue and never relocates a running agent, so setting it mid-session will not move you.
 
 ## Tool inventory
 
@@ -81,7 +110,7 @@ Never re-issue `lanes_start_session` to check on a previous one. That is how you
 
 - **Labels and components are UUIDs, not names.** Always call `lanes_list_labels` / `lanes_list_components` first and resolve names → UUIDs locally. Passing a plain name like `"bug"` will not match anything.
 - **`step` is one of six values:** `backlog`, `planning`, `implementation`, `review`, `done`, `misc`. The tool declares them as an enum, so anything else is rejected before it reaches the board. Use `lanes_move_issue` if you only want to change the step.
-- **Worktree auto-create requires two fields, set in advance.** To make `lanes_start_session` create a fresh git worktree, the issue must already have `worktreeStrategy: "create"` AND `worktreeName: "<branch>"`. Set them via `lanes_create_issue` or `lanes_update_issue` *before* calling `start_session`.
+- **Worktree auto-create requires two fields, set in advance.** To make `lanes_start_session` create a fresh git worktree, the issue must already have `worktreeStrategy: "create"` AND `worktreeName: "<branch>"`. Set them via `lanes_create_issue` or `lanes_update_issue` *before* calling `start_session`. To attach an issue to a worktree that already exists (one you made yourself, mid-session), set `branch` instead — see "Link a worktree you created yourself".
 - **`prompt` has three modes:**
   - Omitted → uses the issue's description (falling back to title).
   - `""` (empty string) → starts the session with no prompt at all.
@@ -177,3 +206,4 @@ Only works for `cli: "claude"` sessions that recorded a `cliSessionId`. Codex/sh
 - ❌ Treating `"No sessions exist for issue N yet"` as a cue to start a session. Inside the launch window it is the expected answer for a session that is starting normally.
 - ❌ Using `lanes_get_issue` to check whether a session started. It does not return sessions — `lanes_get_session_status` does.
 - ❌ Looking for only one of `status` / `runtimeStatus` on a session entry and concluding the session is broken when it's absent. Both keys are present and carry the same value.
+- ❌ Creating a git worktree while running inside a Lanes session and never linking it. The issue keeps pointing at the main checkout, so `lanes_get_issue_changes` and the board's Changes tab both show an empty diff and your work looks like it never happened. Call `lanes_update_issue { id: $LANES_SESSION, branch: "<branch>" }` right after `git worktree add`.

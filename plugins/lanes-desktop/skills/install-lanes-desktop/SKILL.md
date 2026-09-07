@@ -102,5 +102,5 @@ curl -sS -m 2 -o /dev/null -w "%{http_code}\n" http://localhost:5353/sse
 ## Then what
 
 - `lanes-sessions`, in this plugin, is the board and the sessions: creating issues, launching Claude Code against them, reading terminals.
-- `github-lanes-bridge` and `linear-lanes-bridge` pull tickets in from either tracker.
+- `github-lanes-bridge` and `linear-lanes-bridge` pull tickets in from either tracker. They ship in a separate plugin now, so install it first: `/plugin install lanes-bridges@lanes`.
 - [Quickstart](https://lanes.sh/docs/desktop/quick-start) is the same path written for a person.
