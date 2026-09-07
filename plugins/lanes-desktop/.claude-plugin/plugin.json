@@ -1,11 +1,11 @@
 {
   "name": "lanes-desktop",
-  "version": "0.6.0",
-  "description": "Lanes desktop: skills and slash commands for installing Lanes, and for the issue board, sessions, and local MCP",
+  "version": "0.7.0",
+  "description": "Lanes desktop: skills and slash commands for installing Lanes, and for the issue board, sessions, and local MCP. The GitHub and Linear bridges ship separately as lanes-bridges",
   "author": {
     "name": "Lanes",
     "url": "https://lanes.sh"
   },
   "homepage": "https://lanes.sh",
-  "keywords": ["lanes", "linear", "mcp", "sessions", "issue-tracker", "agent-orchestration"]
+  "keywords": ["lanes", "mcp", "sessions", "issue-tracker", "agent-orchestration"]
 }

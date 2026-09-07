@@ -9,12 +9,12 @@
     {
       "name": "lanes-desktop",
       "source": "./plugins/lanes-desktop",
-      "description": "Skills and setup commands for the Lanes desktop app: issue board, sessions, and local MCP"
+      "description": "Skills and setup commands for the Lanes desktop app: issue board, sessions, and local MCP. GitHub and Linear bridges moved to lanes-bridges in 0.7.0"
     },
     {
       "name": "lanes",
       "source": "./plugins/lanes-desktop",
-      "description": "DEPRECATED alias for lanes-desktop — kept so installs predating the rename can still update. Install lanes-desktop instead; this entry will be removed in a future release."
+      "description": "DEPRECATED alias for lanes-desktop \u2014 kept so installs predating the rename can still update. Install lanes-desktop instead; this entry will be removed in a future release."
     },
     {
       "name": "lanes-forms",
@@ -25,6 +25,11 @@
       "name": "lanes-link",
       "source": "./plugins/lanes-link",
       "description": "Set up Lanes Link, the self-hostable MCP endpoint for your own accounts, memory, tasks and secrets"
+    },
+    {
+      "name": "lanes-bridges",
+      "source": "./plugins/lanes-bridges",
+      "description": "Bridge Lanes with GitHub and Linear: import issues, run them locally, post results back"
     }
   ]
 }

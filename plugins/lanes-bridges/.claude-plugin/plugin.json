@@ -1,0 +1,11 @@
+{
+  "name": "lanes-bridges",
+  "version": "0.1.0",
+  "description": "Bridge Lanes with GitHub and Linear: import issues, batch-spawn a session per ticket, and post results back upstream. Split out of lanes-desktop in 0.7.0.",
+  "author": {
+    "name": "Lanes",
+    "url": "https://lanes.sh"
+  },
+  "homepage": "https://lanes.sh",
+  "keywords": ["lanes", "github", "linear", "issue-tracker", "import", "sync"]
+}
