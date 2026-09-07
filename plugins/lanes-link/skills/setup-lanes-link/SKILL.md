@@ -95,7 +95,7 @@ Memory, tasks, assets, skills, entities and the vault work with nothing connecte
 lanes link mcp add --workspace local
 ```
 
-**Register last, after the accounts are connected.** A client reads the tool list when it connects and keeps it, so one registered before the accounts holds a list without them and has to be removed and re-added.
+**Register last, after the accounts are connected.** A client reads the tool list when it connects and keeps it, so one registered first holds a list without them until it re-reads. From 0.10.4 that is a delay rather than a dead end: `lanes_tools_search` and `lanes_tools_call` are in every list the endpoint hands out, so an agent can find and invoke an account its own list does not name. Registering last is still the tidier order, but it is no longer something to undo and redo.
 
 With no argument that covers every agent installed on the machine, or name one: `claude`, `codex`. One endpoint, one token, every profile, so it is once per agent rather than once per account. It also installs the usage skill and a scout agent, which is how the agent knows what the endpoint is for; `--no-skill` registers without touching the agent's own files.
 
@@ -124,7 +124,7 @@ Then have them start a fresh Claude Code session so the registration loads.
 - **Empty members means nobody.** The most common "it connected but sees nothing": a profile with no members list. `lanes link profile members add --me`.
 - **A 401 that looks like a bad token is usually `lanes` off the PATH.** The `$(lanes link token show --raw)` substitution silently yields an empty string.
 - **`start` and `pair` are independent.** `pair` lets the dashboard read the endpoint. It does not serve it.
-- **Register agents last.** A client caches the tool list at connect time.
+- **Register agents last.** A client caches the tool list at connect time. From 0.10.4 an account connected afterwards is still reachable, through `lanes_tools_search`, so this is an ordering preference rather than a re-registration.
 - **`--workspace cloud` has its own credential store**, so its token differs from the local one and connections do not carry across.
 - **After `lanes link skills add`, the client must reconnect.** A skill is served as a prompt rather than a tool, so no counter moves and nothing announces it.
 - **Lanes Link skills are not Claude Code skills.** A Lanes Link skill is one of the user's own procedures, stored per profile and served over the MCP prompts primitive, so the model cannot read a body or pick one; the person invokes it. This SKILL.md, and the one at `~/.claude/skills/lanes-link/SKILL.md`, are the other kind. Do not offer to "add a skill" when someone means either one without saying which you mean.
