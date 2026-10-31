@@ -1,6 +1,6 @@
 ---
 name: lanes-sessions
-description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools — creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues across the backlog/planning/implementation/review/done columns. Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name. Also applies when Claude Code is itself running inside a Lanes session (`LANES_TERMINAL=1`, `LANES_SESSION=<issue id>`) — every worktree you create must be linked to the issue with lanes_update_issue, or the issue's Changes tab points at an empty diff instead of at your work.
+description: Use when managing Lanes issues or driving Claude Code sessions through the lanes_* MCP tools: creating issues, starting/stopping/inspecting sessions, batch-launching work across worktrees, reading terminal output, attaching labels and components by UUID, or moving issues between the board's statuses (backlog, planning, implementation, review, done, or ones the user added, such as todo). Skill applies whenever a request mentions "Lanes", "lanes board", "lanes issue", "lanes session", or any lanes_* tool name. Also applies when Claude Code is itself running inside a Lanes session (`LANES_TERMINAL=1`, `LANES_SESSION=<issue id>`). Every worktree you create must be linked to the issue with lanes_update_issue, or the issue's Changes tab points at an empty diff instead of at your work.
 ---
 
 # Lanes sessions
@@ -63,7 +63,7 @@ Linking is not the same as asking for a worktree. `worktreeStrategy: "create"` o
 
 | Group | Tool | Purpose |
 |---|---|---|
-| Issues | `lanes_list_issues` | Filter by `step` / `tags` (any-match) / `componentId` / `search`. **Defaults are scoped**: at most 20, active project only, `done` excluded. Pass `limit` (no upper bound), `allProjects: true`, or `includeDone: true` to widen. Returns an envelope `{ issues, appliedFilters, truncated, totalAvailable }`, so check `truncated` before concluding a search found nothing. |
+| Issues | `lanes_list_issues` | Filter by `step` / `tags` (any-match) / `componentId` / `search`. **Defaults are scoped**: at most 20, active project only, every Done status excluded. Pass `limit` (no upper bound), `allProjects: true`, or `includeDone: true` to widen. Filtering by a Done status includes it. Returns an envelope `{ issues, appliedFilters, truncated, totalAvailable }`, so check `truncated` before concluding a search found nothing. |
 | | `lanes_get_issue` | Full details by `id`. Does **not** include sessions. |
 | | `lanes_create_issue` | Required: `title`. |
 | | `lanes_update_issue` | Patch by `id`; pass `null` to clear nullable fields. |
@@ -118,7 +118,8 @@ Never re-issue `lanes_start_session` to check on a previous one. That is how you
 ## Critical gotchas
 
 - **Labels and components are UUIDs, not names.** Always call `lanes_list_labels` / `lanes_list_components` first and resolve names → UUIDs locally. Passing a plain name like `"bug"` will not match anything.
-- **`step` is one of six values:** `backlog`, `planning`, `implementation`, `review`, `done`, `misc`. The tool declares them as an enum, so anything else is rejected before it reaches the board. Use `lanes_move_issue` if you only want to change the step.
+- **`step` is a status id, and the user defines the statuses.** Each tool's `step` enum comes from the user's Settings > Workflows, and its description names every option as `id (Label, category)`. The built-in ids are `backlog`, `planning`, `implementation`, `review`, `misc` and `done`. The user can rename them, switch them off, and add their own, such as `todo`. A renamed status keeps its id, so match on the id, never the label. Create, update and move take active statuses only, and the error for anything else lists the ones that are. Use `lanes_move_issue` if you only want to change the step.
+- **Each status is Not started, In progress or Done.** Moving an issue into any Done status finishes it, and `lanes_list_issues` leaves every Done status out by default, not only `done`. A new issue with no `step` lands in `backlog`, or in the first active Not started status while Backlog is switched off.
 - **Worktree auto-create requires two fields, set in advance.** To make `lanes_start_session` create a fresh git worktree, the issue must already have `worktreeStrategy: "create"` AND `worktreeName: "<branch>"`. Set them via `lanes_create_issue` or `lanes_update_issue` *before* calling `start_session`. To attach an issue to a worktree that already exists (one you made yourself, mid-session), set `branch` instead — see "Link a worktree you created yourself".
 - **`prompt` has three modes:**
   - Omitted → uses the issue's description (falling back to title).
@@ -199,10 +200,12 @@ Only works for `cli: "claude"` sessions that recorded a `cliSessionId`. Codex/sh
 3. lanes_move_issue { id, step: "done" }
 ```
 
+Moving an issue over MCP never stops its sessions, whatever the user's **Stop sessions on Done** setting says, so step 2 is yours to do. If `done` is switched off, step 3 takes the active Done status from the enum instead.
+
 ## Anti-patterns
 
 - ❌ Calling `lanes_create_issue` with `tags: ["bug"]`. Tags must be label UUIDs from `lanes_list_labels`.
-- ❌ Setting `step: "todo"` or `"in-progress"`. Neither exists. The board's steps are `backlog`, `planning`, `implementation`, `review`, `done` and `misc`.
+- ❌ Guessing a `step` from what boards usually have. `todo` or `in-progress` exist only if this user added them, and a status can be renamed without its id changing. Read the `step` enum in the tool's schema.
 - ❌ Calling `lanes_start_session` with `worktreeStrategy: "create"` in the same call — the field lives on the *issue*, not the session call. Set it via `create_issue` / `update_issue` first.
 - ❌ Polling `lanes_read_terminal` in a tight loop. Read once, summarise, ask the user before re-polling.
 - ❌ Confusing `id` (issue endpoints) with `issueId` (session endpoints). They refer to the same thing but live under different keys.

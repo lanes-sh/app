@@ -1,6 +1,6 @@
 {
   "name": "lanes-desktop",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Lanes desktop: skills and slash commands for installing Lanes, and for the issue board, sessions, and local MCP. The GitHub and Linear bridges ship separately as lanes-bridges",
   "author": {
     "name": "Lanes",
